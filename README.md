@@ -1,0 +1,2 @@
+# pyfm
+ Python Footbal Manager
