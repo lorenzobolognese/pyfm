@@ -10,8 +10,10 @@
 #-------------------------------------------------------------------------------
 
 import time
-
-from pyfm import Player, Team, Match, F442, F352
+from match import Match
+from formation import F442, F352
+from team import Team
+from player import Player
 
 class Team1(object):
     def __init__(self):
