@@ -30,6 +30,8 @@ class Match(Thread):
         self.offense2 = 0
         self.shoot2 = 0
 
+        self.scorerList = []
+
     def GetLog(self):
         return self.log.get()
 
@@ -39,7 +41,19 @@ class Match(Thread):
     def GetStats(self):
         stats1 = [self.offense1, self.shoot1, self.goal1]
         stats2 = [self.offense2, self.shoot2, self.goal2]
-        return stats1, stats2
+        return stats1, stats2, self.scorerList
+
+    def UpdatePlayerStats(self, name, teamName):
+        temp = []
+        found = False
+        for item in self.scorerList:
+            score = item[2]
+            if item[0] == name:
+                score = score + 1
+                found = True
+            temp.append((item[0], item[1], score))
+        if found == False: temp.append((name, teamName, 1))
+        self.scorerList = temp
 
     def Challenge(self, equilibrium):
         overAll1 = self.f1.GetOverall()
@@ -86,28 +100,30 @@ class Match(Thread):
             if res == 0: self.log.put("Minute:" + str(minute) + " --> " + str(self.goal1) + " - " + str(self.goal2))
             if res == -10:
                 self.offense1 = self.offense1 + 1
-                self.log.put("Minute:" + str(minute) + " --> " + self.f1.name + " ATTACK STOPPED --> " + str(self.goal1) + " - " + str(self.goal2))
+                self.log.put("Minute:" + str(minute) + " --> " + self.f1.name + " ATTACK STOPPED --> " + self.f1.name + " vs. " + self.f2.name + ": " + str(self.goal1) + " - " + str(self.goal2))
             if res == -11:
                 self.offense1 = self.offense1 + 1
                 self.shoot1 = self.shoot1 + 1
-                self.log.put("Minute:" + str(minute) + " --> " + name + " (" + role + "), " + self.f1.name + " SHOOT SAVED --> " + str(self.goal1) + " - " + str(self.goal2))
+                self.log.put("Minute:" + str(minute) + " --> " + name + " (" + role + "), " + self.f1.name + " SHOOT SAVED --> " + self.f1.name + " vs. " + self.f2.name + ": " + str(self.goal1) + " - " + str(self.goal2))
             if res == -20:
                 self.offense2 = self.offense2 + 1
-                self.log.put("Minute:" + str(minute) + " --> " + self.f2.name + " ATTACK STOPPED --> " + str(self.goal1) + " - " + str(self.goal2))
+                self.log.put("Minute:" + str(minute) + " --> " + self.f2.name + " ATTACK STOPPED --> " + self.f1.name + " vs. " + self.f2.name + ": " + str(self.goal1) + " - " + str(self.goal2))
             if res == -21:
                 self.offense2 = self.offense2 + 1
                 self.shoot2 = self.shoot2 + 1
-                self.log.put("Minute:" + str(minute) + " --> " + name + " (" + role +  "), " + self.f2.name + " SHOOT SAVED --> " + str(self.goal1) + " - " + str(self.goal2))
+                self.log.put("Minute:" + str(minute) + " --> " + name + " (" + role +  "), " + self.f2.name + " SHOOT SAVED --> " + self.f1.name + " vs. " + self.f2.name + ": " + str(self.goal1) + " - " + str(self.goal2))
             if res == 1:
                 self.offense1 = self.offense1 + 1
                 self.shoot1 = self.shoot1 + 1
                 self.goal1 = self.goal1 + 1
-                self.log.put("Minute:" + str(minute) + " --> " + name + " (" + role + "), GOAL " + self.f1.name + "!!! --> " + str(self.goal1) + " - " + str(self.goal2))
+                self.UpdatePlayerStats(name, self.f1.name)
+                self.log.put("Minute:" + str(minute) + " --> " + name + " (" + role + "), GOAL " + self.f1.name + "!!! --> " + self.f1.name + " vs. " + self.f2.name + ": " + str(self.goal1) + " - " + str(self.goal2))
             if res == 2:
                 self.offense2 = self.offense2 + 1
                 self.shoot2 = self.shoot2 + 1
                 self.goal2 = self.goal2 + 1
-                self.log.put("Minute:" + str(minute) + " --> " + name + " (" + role + "), GOAL " + self.f2.name + "!!! --> " + str(self.goal1) + " - " + str(self.goal2))
+                self.UpdatePlayerStats(name, self.f2.name)
+                self.log.put("Minute:" + str(minute) + " --> " + name + " (" + role + "), GOAL " + self.f2.name + "!!! --> " + self.f1.name + " vs. " + self.f2.name + ": " + str(self.goal1) + " - " + str(self.goal2))
 
         self.isPlaying = False
 

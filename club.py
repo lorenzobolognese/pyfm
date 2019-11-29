@@ -16,6 +16,7 @@ class Club(object):
     def __init__(self, name = ""):
         self.team = Team(name)
         self.formation = Formation()
+        self.points = 0
 
     def SelectTeam(self, playersList):
         self.team.Add(playersList)
