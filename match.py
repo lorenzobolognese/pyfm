@@ -11,34 +11,35 @@
 
 import random
 import time
+from queue import Queue
+from threading import Thread
 
-class Match(object):
-    def __init__(self, f1, f2):
-        self.f1 = f1
-        self.f2 = f2
+class Match(Thread):
+    def __init__(self, team1, team2):
+        super().__init__()
+        self.f1 = team1.formation
+        self.f2 = team2.formation
+        self.log = Queue()
+        self.isPlaying = True
 
         self.goal1 = 0
+        self.offense1 = 0
+        self.shoot1 = 0
+
         self.goal2 = 0
-        self.attackCounter1 = 0
-        self.shootCounter1 = 0
-        self.attackCounter2 = 0
-        self.shootCounter2 = 0
+        self.offense2 = 0
+        self.shoot2 = 0
 
-    def ShowStats(self):
-        print()
-        print("MATCH STATS")
-        print()
-        print(self.f1.name)
-        print("Attacks: " + str(self.attackCounter1))
-        print("Shoots: " + str(self.shootCounter1))
-        print("Goals: " + str(self.goal1))
+    def GetLog(self):
+        return self.log.get()
 
-        print()
-        print(self.f2.name)
-        print("Attacks: " + str(self.attackCounter2))
-        print("Shoots: " + str(self.shootCounter2))
-        print("Goals: " + str(self.goal2))
-        print()
+    def isLogEmpty(self):
+        return self.log.empty()
+
+    def GetStats(self):
+        stats1 = [self.offense1, self.shoot1, self.goal1]
+        stats2 = [self.offense2, self.shoot2, self.goal2]
+        return stats1, stats2
 
     def Challenge(self, equilibrium):
         overAll1 = self.f1.GetOverall()
@@ -77,39 +78,38 @@ class Match(object):
                 else: return -21, role, name
             else: return -20, "", ""
 
-    def Play(self):
+    def run(self):
+        self.isPlaying = True
         eq = random.randint(1, 3)
-        ## print("Equilibrium: " + str(eq))
         for minute in range(1, 91):
-            time.sleep(0.5)
             res, role, name = self.Challenge(eq)
-            if res == 0: print("Minute:" + str(minute) + " --> " + str(self.goal1) + " - " + str(self.goal2))
+            if res == 0: self.log.put("Minute:" + str(minute) + " --> " + str(self.goal1) + " - " + str(self.goal2))
             if res == -10:
-                self.attackCounter1 = self.attackCounter1 + 1
-                print("Minute:" + str(minute) + " --> " + self.f1.name + " ATTACK STOPPED --> " + str(self.goal1) + " - " + str(self.goal2))
+                self.offense1 = self.offense1 + 1
+                self.log.put("Minute:" + str(minute) + " --> " + self.f1.name + " ATTACK STOPPED --> " + str(self.goal1) + " - " + str(self.goal2))
             if res == -11:
-                self.attackCounter1 = self.attackCounter1 + 1
-                self.shootCounter1 = self.shootCounter1 + 1
-                print("Minute:" + str(minute) + " --> " + name + " (" + role + "), " + self.f1.name + " SHOOT SAVED --> " + str(self.goal1) + " - " + str(self.goal2))
+                self.offense1 = self.offense1 + 1
+                self.shoot1 = self.shoot1 + 1
+                self.log.put("Minute:" + str(minute) + " --> " + name + " (" + role + "), " + self.f1.name + " SHOOT SAVED --> " + str(self.goal1) + " - " + str(self.goal2))
             if res == -20:
-                self.attackCounter2 = self.attackCounter2 + 1
-                print("Minute:" + str(minute) + " --> " + self.f2.name + " ATTACK STOPPED --> " + str(self.goal1) + " - " + str(self.goal2))
+                self.offense2 = self.offense2 + 1
+                self.log.put("Minute:" + str(minute) + " --> " + self.f2.name + " ATTACK STOPPED --> " + str(self.goal1) + " - " + str(self.goal2))
             if res == -21:
-                self.attackCounter2 = self.attackCounter2 + 1
-                self.shootCounter2 = self.shootCounter2 + 1
-                print("Minute:" + str(minute) + " --> " + name + " (" + role +  "), " + self.f2.name + " SHOOT SAVED --> " + str(self.goal1) + " - " + str(self.goal2))
+                self.offense2 = self.offense2 + 1
+                self.shoot2 = self.shoot2 + 1
+                self.log.put("Minute:" + str(minute) + " --> " + name + " (" + role +  "), " + self.f2.name + " SHOOT SAVED --> " + str(self.goal1) + " - " + str(self.goal2))
             if res == 1:
-                self.attackCounter1 = self.attackCounter1 + 1
-                self.shootCounter1 = self.shootCounter1 + 1
+                self.offense1 = self.offense1 + 1
+                self.shoot1 = self.shoot1 + 1
                 self.goal1 = self.goal1 + 1
-                print("Minute:" + str(minute) + " --> " + name + " (" + role + "), GOAL " + self.f1.name + "!!! --> " + str(self.goal1) + " - " + str(self.goal2))
+                self.log.put("Minute:" + str(minute) + " --> " + name + " (" + role + "), GOAL " + self.f1.name + "!!! --> " + str(self.goal1) + " - " + str(self.goal2))
             if res == 2:
-                self.attackCounter2 = self.attackCounter2 + 1
-                self.shootCounter2 = self.shootCounter2 + 1
+                self.offense2 = self.offense2 + 1
+                self.shoot2 = self.shoot2 + 1
                 self.goal2 = self.goal2 + 1
-                print("Minute:" + str(minute) + " --> " + name + " (" + role + "), GOAL " + self.f2.name + "!!! --> " + str(self.goal1) + " - " + str(self.goal2))
+                self.log.put("Minute:" + str(minute) + " --> " + name + " (" + role + "), GOAL " + self.f2.name + "!!! --> " + str(self.goal1) + " - " + str(self.goal2))
 
-        return self.goal1, self.goal2
+        self.isPlaying = False
 
 if __name__ == '__main__':
     pass
