@@ -18,24 +18,25 @@ from serieA import *
 class League(object):
     def __init__(self):
         team1 = Club("Juventus FC")
-        team1.SelectTeam(Juventus())
-        team1.SelectFormation(F433)
+        tactics, players = Juventus()
 
+        team1.SelectTeam(tactics, players)
+
+        tactics, players = Internazionale()
         team2 = Club("FC Inter Milan")
-        team2.SelectTeam(Internazionale())
-        team2.SelectFormation(F352)
+        team2.SelectTeam(tactics, players)
 
+        tactics, players = Napoli()
         team3 = Club("SSC Napoli")
-        team3.SelectTeam(Napoli())
-        team3.SelectFormation(F442)
+        team3.SelectTeam(tactics, players)
 
+        tactics, players = Roma()
         team4 = Club("AS Roma")
-        team4.SelectTeam(Roma())
-        team4.SelectFormation(F451)
+        team4.SelectTeam(tactics, players)
 
+        tactics, players = Spal()
         team5 = Club("S.P.A.L.")
-        team5.SelectTeam(Spal())
-        team5.SelectFormation(F532)
+        team5.SelectTeam(tactics, players)
 
         self.board = [team1, team2, team3, team4, team5]
         self.scorerRanking = []

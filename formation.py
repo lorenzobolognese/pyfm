@@ -28,6 +28,9 @@ class Formation(object):
             self.playersList[i][2] = team.roster[i]
 
     def GetPlayerStats(self):
+        # p[0] --> role
+        # p[1] --> side
+        # p[2] --> player
         l = [self.name, self.module]
         for p in self.playersList:
             l.append(p[0] + p[1] + " " + p[2].name + " --> " + str(p[2].GetPerformance(p[0], p[1])))
@@ -42,6 +45,9 @@ class Formation(object):
         return l
 
     def GetStrike(self):
+        # p[0] --> role
+        # p[1] --> side
+        # p[2] --> player
         sum = 0
         # Increasing of propability it's a midfielder or attacker to attempt the shoot
         whichPlayer = random.randint(1, 40)
@@ -52,12 +58,18 @@ class Formation(object):
         return int(p[2].GetPerformance(p[0], p[1], True)*2), p[0], p[2].name
 
     def GetOverall(self):
+        # p[0] --> role
+        # p[1] --> side
+        # p[2] --> player
         sum = 0
         for p in self.playersList:
             sum = sum + p[2].GetPerformance(p[0], p[1])*2
         return int(sum)
 
     def GetAttack(self):
+        # p[0] --> role
+        # p[1] --> side
+        # p[2] --> player
         sum = 0
         for p in self.playersList:
             if p[0] in ["A"]: sum = sum + p[2].GetPerformance(p[0], p[1])*2
@@ -65,6 +77,9 @@ class Formation(object):
         return int(sum)
 
     def GetMidfield(self):
+        # p[0] --> role
+        # p[1] --> side
+        # p[2] --> player
         sum = 0
         for p in self.playersList:
             if p[0] in ["M"]: sum = sum + p[2].GetPerformance(p[0], p[1])*2
@@ -72,6 +87,9 @@ class Formation(object):
         return int(sum)
 
     def GetDefense(self):
+        # p[0] --> role
+        # p[1] --> side
+        # p[2] --> player
         sum = 0
         for p in self.playersList:
             if p[0] in ["D"]: sum = sum + p[2].GetPerformance(p[0], p[1])*2
@@ -79,6 +97,9 @@ class Formation(object):
         return int(sum)
 
     def GetGoalkeep(self):
+        # p[0] --> role
+        # p[1] --> side
+        # p[2] --> player
         sum = 0
         for p in self.playersList:
             if p[0] == "GK": sum = sum + p[2].GetPerformance(p[0], p[1])*2

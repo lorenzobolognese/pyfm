@@ -18,11 +18,9 @@ class Club(object):
         self.formation = Formation()
         self.points = 0
 
-    def SelectTeam(self, playersList):
+    def SelectTeam(self, tactics, playersList):
         self.team.Add(playersList)
-
-    def SelectFormation(self, formation):
-        self.formation = formation()
+        self.formation = tactics()
         self.formation.Set(self.team)
 
 if __name__ == '__main__':
