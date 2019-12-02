@@ -46,15 +46,23 @@ class Formation(object):
         l.append(self.GetOverall())
         return l
 
+    def __getFirstPlayerByRoleIndex(self, role):
+        idx = 0
+        for p in self.playersList:
+            if p[0] == role: return idx
+            idx = idx + 1
+
     def GetStrike(self):
         # p[0] --> role
         # p[1] --> side
         # p[2] --> player
         sum = 0
         # Increasing of propability it's a midfielder or attacker to attempt the shoot
+        mid = self.__getFirstPlayerByRoleIndex("M")
+        atk = self.__getFirstPlayerByRoleIndex("A")
         whichPlayer = random.randint(1, 40)
-        if whichPlayer > 10 and whichPlayer < 21: whichPlayer = random.randint(5, 10)
-        elif whichPlayer > 20: whichPlayer = random.randint(8, 10)
+        if whichPlayer > 10 and whichPlayer < 21: whichPlayer = random.randint(mid, atk)
+        elif whichPlayer > 20: whichPlayer = random.randint(atk, 10)
 
         p = self.playersList[whichPlayer]
         return int(p[2].GetPerformance("A", p[0], p[1])), p[0], p[2].name
@@ -107,7 +115,7 @@ class F442(Formation):
         super().__init__()
         self.module = "4-4-2"
         self.dummy = Player(0, 0, 0, 0, ["GK", "D", "M", "A"], ["L", "R", "C"])
-        self.Add("GK", "", self.dummy)
+        self.Add("GK", "C", self.dummy)
         self.Add("D", "L", self.dummy)
         self.Add("D", "C", self.dummy)
         self.Add("D", "C", self.dummy)
@@ -124,7 +132,7 @@ class F433(Formation):
         super().__init__()
         self.module = "4-3-3"
         self.dummy = Player(0, 0, 0, 0, ["GK", "D", "M", "A"], ["L", "R", "C"])
-        self.Add("GK", "", self.dummy)
+        self.Add("GK", "C", self.dummy)
         self.Add("D", "L", self.dummy)
         self.Add("D", "C", self.dummy)
         self.Add("D", "C", self.dummy)
@@ -141,7 +149,7 @@ class F451(Formation):
         super().__init__()
         self.module = "4-5-1"
         self.dummy = Player(0, 0, 0, 0, ["GK", "D", "M", "A"], ["L", "R", "C"])
-        self.Add("GK", "", self.dummy)
+        self.Add("GK", "C", self.dummy)
         self.Add("D", "L", self.dummy)
         self.Add("D", "C", self.dummy)
         self.Add("D", "C", self.dummy)
@@ -158,7 +166,7 @@ class F352(Formation):
         super().__init__()
         self.module = "3-5-2"
         self.dummy = Player(0, 0, 0, 0, ["GK", "D", "M", "A"], ["L", "R", "C"])
-        self.Add("GK", "", self.dummy)
+        self.Add("GK", "C", self.dummy)
         self.Add("D", "C", self.dummy)
         self.Add("D", "C", self.dummy)
         self.Add("D", "C", self.dummy)
@@ -175,7 +183,7 @@ class F532(Formation):
         super().__init__()
         self.module = "5-3-2"
         self.dummy = Player(0, 0, 0, 0, ["GK", "D", "M", "A"], ["L", "R", "C"])
-        self.Add("GK", "", self.dummy)
+        self.Add("GK", "C", self.dummy)
         self.Add("D", "L", self.dummy)
         self.Add("D", "C", self.dummy)
         self.Add("D", "C", self.dummy)
@@ -188,4 +196,8 @@ class F532(Formation):
         self.Add("A", "C", self.dummy)
 
 if __name__ == '__main__':
-    pass
+    test = F451()
+    print(test.GetAttack())
+    print(test.GetMidfield())
+    print(test.GetDefense())
+    print(test.GetGoalkeep())

@@ -37,7 +37,11 @@ class League(object):
         team5 = Club("S.P.A.L.")
         team5.SelectTeam(tactics, chariness, players)
 
-        self.board = [team1, team2, team3, team4, team5]
+        tactics, chariness, players = Brescia()
+        team6 = Club("Brescia Calcio")
+        team6.SelectTeam(tactics, chariness, players)
+
+        self.board = [team1, team2, team3, team4, team5, team6]
         self.scorerRanking = []
 
     def ShowIntro(self, teamHome, teamAway):
