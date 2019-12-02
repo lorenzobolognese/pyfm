@@ -55,20 +55,23 @@ class Match(Thread):
         if found == False: temp.append((name, teamName, 1))
         self.scorerList = temp
 
-    def Challenge(self, equilibrium):
+    def Challenge(self):
         overAll1 = self.f1.GetOverall()
         attack1 = self.f1.GetAttack()
         midfield1 = self.f1.GetMidfield()
         defense1 = self.f1.GetDefense()
         goalkeep1 = self.f1.GetGoalkeep()
+        chariness1 = self.f1.GetChariness()
 
         overAll2 = self.f2.GetOverall()
         attack2 = self.f2.GetAttack()
         midfield2 = self.f2.GetMidfield()
         defense2 = self.f2.GetDefense()
         goalkeep2 = self.f2.GetGoalkeep()
+        chariness2 = self.f2.GetChariness()
 
-        draw = equilibrium*(overAll1 + overAll2)
+        weather = random.randint(0,1)
+        draw = ((chariness1 + weather) * overAll1) + ((chariness2 + weather) * overAll2)
 
         stats = random.randint(0, draw + midfield1 + midfield2)
         if (stats < draw): return 0, "", ""
@@ -94,9 +97,8 @@ class Match(Thread):
 
     def run(self):
         self.isPlaying = True
-        eq = random.randint(1, 3)
         for minute in range(1, 91):
-            res, role, name = self.Challenge(eq)
+            res, role, name = self.Challenge()
             if res == 0: self.log.put("Minute:" + str(minute) + " --> " + str(self.goal1) + " - " + str(self.goal2))
             if res == -10:
                 self.offense1 = self.offense1 + 1

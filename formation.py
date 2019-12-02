@@ -17,12 +17,14 @@ class Formation(object):
         self.playersList = []
         self.name = ""
         self.module = ""
+        self.chariness = 0
 
     def Add(self, role, side, player):
         self.playersList.append([role, side, player])
 
-    def Set(self, team):
+    def Set(self, team, chariness):
         self.name = team.name
+        self.chariness = chariness
         for i in range(0, 11):
             r = team.roster[i]
             self.playersList[i][2] = team.roster[i]
@@ -96,6 +98,9 @@ class Formation(object):
         sum = 0
         for p in self.playersList: sum = sum + p[2].GetPerformance("GK", p[0], p[1])
         return int(sum)
+
+    def GetChariness(self):
+        return self.chariness
 
 class F442(Formation):
     def __init__(self):

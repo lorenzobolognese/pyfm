@@ -16,12 +16,13 @@ class Club(object):
     def __init__(self, name = ""):
         self.team = Team(name)
         self.formation = Formation()
+        self.chariness = 0
         self.points = 0
 
-    def SelectTeam(self, tactics, playersList):
+    def SelectTeam(self, tactics, chariness, playersList):
         self.team.Add(playersList)
         self.formation = tactics()
-        self.formation.Set(self.team)
+        self.formation.Set(self.team, chariness)
 
 if __name__ == '__main__':
     pass

@@ -14,6 +14,7 @@ from formation import *
 
 def Juventus():
     tactics = F433
+    chariness = 1
     # Ratings:   A   M   D   GK
     p1  = Player(10, 17, 38, 87, "GK", "", "Szczęsny")
     p2  = Player(50, 52, 84, 10, "D", "L", "Alex Sandro")
@@ -26,10 +27,11 @@ def Juventus():
     p9  = Player(94, 85, 55, 10, "A", ["L", "R", "C"], "Cristiano Ronaldo")
     p10 = Player(88, 70, 45, 10, "A", "C", "Higuain")
     p11 = Player(90, 86, 51, 10, "A", ["L", "R", "C"], "Dybala")
-    return tactics, [p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11]
+    return tactics, chariness, [p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11]
 
 def Internazionale():
     tactics = F352
+    chariness = 1
     # Ratings:   A   M   D   GK
     p1  = Player(10, 20, 29, 90, "GK", "", "Handanovic")
     p2  = Player(51, 37, 85, 10, "D", ["R", "C"], "De Vrij")
@@ -42,10 +44,11 @@ def Internazionale():
     p9  = Player(70, 82, 41, 10, "M", "R", "Candreva")
     p10 = Player(85, 70, 33, 10, "A", ["L", "R", "C"], "Lautaro Martinez")
     p11 = Player(88, 51, 45, 10, "A", "C", "Lukaku")
-    return tactics, [p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11]
+    return tactics, chariness, [p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11]
 
 def Napoli():
     tactics = F442
+    chariness = 1
     # Ratings:   A   M   D   GK
     p1  = Player(10, 21, 32, 82, "GK", "", "Meret")
     p2  = Player(24, 41, 79, 10, "D", "L", "Hysaj")
@@ -58,10 +61,11 @@ def Napoli():
     p9  = Player(75, 83, 56, 10, "M", ["R", "C"], "Fabian Ruiz")
     p10 = Player(82, 82, 13, 10, "A", ["L", "C"], "Insigne")
     p11 = Player(88, 71, 34, 10, "A", ["L", "R", "C"], "Mertens")
-    return tactics, [p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11]
+    return tactics, chariness, [p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11]
 
 def Roma():
     tactics = F451
+    chariness = 0
     # Ratings:   A   M   D   GK
     p1  = Player(10, 13, 26, 79, "GK", "", "Lopez")
     p2  = Player(37, 44, 76, 10, "D", "L", "Spinazzola")
@@ -74,10 +78,11 @@ def Roma():
     p9  = Player(62, 83, 69, 10, "M", ["R", "C"], "Veretout")
     p10 = Player(76, 86, 32, 10, ["M", "A"], "R", "Zaniolo")
     p11 = Player(86, 65, 19, 10, "A", "C", "Dzeko")
-    return tactics, [p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11]
+    return tactics, chariness, [p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11]
 
 def Spal():
     tactics = F532
+    chariness = 3
     # Ratings:   A   M   D   GK
     p1  = Player(10, 12, 34, 73, "GK", "", "Berisha")
     p2  = Player(33, 30, 61, 10, "D", "L", "Reca")
@@ -90,7 +95,7 @@ def Spal():
     p9  = Player(60, 77, 39, 10, ["D", "M"], "C", "Valdifiori")
     p10 = Player(72, 65, 40, 10, "A", "C", "Floccari")
     p11 = Player(83, 54, 33, 10, "A", "C", "Petagna")
-    return tactics, [p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11]
+    return tactics, chariness, [p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11]
 
 if __name__ == '__main__':
     pass
