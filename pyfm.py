@@ -15,6 +15,9 @@ from club import Club
 from formation import *
 from serieA import *
 
+MATCH_INTRO_SPEED_TIMEOUT = 0.0
+MATCH_COMMENTARY_SPEED_TIMEOUT = 0.0
+
 class League(object):
     def __init__(self):
         name, tactics, chariness, players = Juventus()
@@ -52,11 +55,11 @@ class League(object):
         stats1 = teamHome.formation.GetPlayerStats()
         stats2 = teamAway.formation.GetPlayerStats()
         print(stats1[0] + " vs. " + stats2[0])
-        time.sleep(5)
+        time.sleep(MATCH_INTRO_SPEED_TIMEOUT)
         for line in stats1: print(line)
-        time.sleep(5)
+        time.sleep(MATCH_INTRO_SPEED_TIMEOUT)
         for line in stats2: print(line)
-        time.sleep(5)
+        time.sleep(MATCH_INTRO_SPEED_TIMEOUT)
         print()
 
     def ShowStats(self, stats1, stats2, t1, t2):
@@ -68,22 +71,36 @@ class League(object):
 
     def ShowTable(self):
         table = []
-        for item in self.board: table.append((item.team.name, item.points))
+        for item in self.board: table.append((item.team.name, item.points, item.played, item.won, item.draw, item.lost, item.goalFor, item.goalAgainst))
         print("CHAMPIONSHIP BOARD")
-        teams = sorted(table, reverse=True, key=lambda student: student[1])
+        teams = sorted(table, reverse=True, key=lambda parameter: parameter[1])
         for t in teams: print(t)
         print()
         print("STRIKERS")
-        scorers = sorted(self.scorerRanking, reverse=True, key=lambda student: student[2])
+        scorers = sorted(self.scorerRanking, reverse=True, key=lambda parameter: parameter[2])
         for p in scorers: print(p)
         print()
 
     def UpdateTable(self, club1, stats1, club2, stats2):
         goal1 = stats1[2]
         goal2 = stats2[2]
-        if goal1 > goal2: club1.points = club1.points + 3
-        elif goal1 < goal2: club2.points = club2.points + 3
+        club1.played = club1.played + 1
+        club1.goalFor = club1.goalFor + goal1
+        club1.goalAgainst = club1.goalAgainst + goal2
+        club2.played = club2.played + 1
+        club2.goalFor = club2.goalFor + goal2
+        club2.goalAgainst = club2.goalAgainst + goal1
+        if goal1 > goal2:
+            club1.points = club1.points + 3
+            club1.won = club1.won + 1
+            club2.lost = club2.lost + 1
+        elif goal1 < goal2:
+            club2.points = club2.points + 3
+            club2.won = club2.won + 1
+            club1.lost = club1.lost + 1
         else:
+            club1.draw = club1.draw + 1
+            club2.draw = club2.draw + 1
             club1.points = club1.points + 1
             club2.points = club2.points + 1
 
@@ -116,7 +133,7 @@ class League(object):
                     while (match.isPlaying == True) or (match.isLogEmpty() == False):
                         msg = match.GetLog()
                         print(msg)
-                        time.sleep(0.25)
+                        time.sleep(MATCH_COMMENTARY_SPEED_TIMEOUT)
 
                     stats1, stats2, scorer = match.GetStats()
                     self.ShowStats(stats1, stats2, t1, t2)
