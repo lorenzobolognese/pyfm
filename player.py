@@ -10,23 +10,30 @@
 #-------------------------------------------------------------------------------
 
 class Player(object):
-    def __init__(self, roles, positions, power, name = "John Doe"):
-        self.roles = roles
-        self.positions = positions
-        self.power = power
+    def __init__(self, rateA, rateM, rateD, rateGK, role, side, name = "John Doe"):
+        self.role = role
+        self.side = side
+        self.rateA = rateA
+        self.rateM = rateM
+        self.rateD = rateD
+        self.rateGK = rateGK
         self.name = name
 
-    def GetPerformance(self, fieldRole, fieldPosition, isShooting = False):
-        if fieldRole in self.roles: r = 100
+    def GetStats(self, fieldRole, fieldSide):
+        if fieldRole in self.role: r = 100
         else: r = 50
-        if fieldPosition in self.positions: p = 100
+        if fieldSide in self.side: p = 100
         else: p = 50
-        if isShooting == True:
-            if fieldRole == "A": s = 100
-            elif fieldRole == "C": s = 85
-            else: s = 70
-        else: s = 100
-        return self.power*(r/100)*(p/100)*(s/100)
+        return self.rateA*(r/100)*(p/100), self.rateM*(r/100)*(p/100), self.rateD*(r/100)*(p/100), self.rateGK*(r/100)*(p/100)
+
+    def GetPerformance(self, zone, fieldRole, fieldSide):
+        a, m, d, gk = self.GetStats(fieldRole, fieldSide)
+        if zone == "A": power = a
+        if zone == "M": power = m
+        if zone == "D": power = d
+        if zone == "GK": power = gk
+        if zone == "ALL": power = a + m + d + gk
+        return power
 
 if __name__ == '__main__':
     pass

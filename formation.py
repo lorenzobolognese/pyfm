@@ -33,7 +33,7 @@ class Formation(object):
         # p[2] --> player
         l = [self.name, self.module]
         for p in self.playersList:
-            l.append(p[0] + p[1] + " " + p[2].name + " --> " + str(p[2].GetPerformance(p[0], p[1])))
+            l.append(p[0] + p[1] + " " + p[2].name + " --> " + str(p[2].GetStats(p[0], p[1])))
         return l
 
     def GetPartyStats(self):
@@ -55,15 +55,14 @@ class Formation(object):
         elif whichPlayer > 20: whichPlayer = random.randint(8, 10)
 
         p = self.playersList[whichPlayer]
-        return int(p[2].GetPerformance(p[0], p[1], True)*2), p[0], p[2].name
+        return int(p[2].GetPerformance("A", p[0], p[1])), p[0], p[2].name
 
     def GetOverall(self):
         # p[0] --> role
         # p[1] --> side
         # p[2] --> player
         sum = 0
-        for p in self.playersList:
-            sum = sum + p[2].GetPerformance(p[0], p[1])*2
+        for p in self.playersList: sum = sum + p[2].GetPerformance("ALL", p[0], p[1])
         return int(sum)
 
     def GetAttack(self):
@@ -71,9 +70,7 @@ class Formation(object):
         # p[1] --> side
         # p[2] --> player
         sum = 0
-        for p in self.playersList:
-            if p[0] in ["A"]: sum = sum + p[2].GetPerformance(p[0], p[1])*2
-            if p[0] in ["M"]: sum = sum + p[2].GetPerformance(p[0], p[1])/2
+        for p in self.playersList: sum = sum + p[2].GetPerformance("A", p[0], p[1])
         return int(sum)
 
     def GetMidfield(self):
@@ -81,9 +78,7 @@ class Formation(object):
         # p[1] --> side
         # p[2] --> player
         sum = 0
-        for p in self.playersList:
-            if p[0] in ["M"]: sum = sum + p[2].GetPerformance(p[0], p[1])*2
-            if p[0] in ["A", "D"]: sum = sum + p[2].GetPerformance(p[0], p[1])/2
+        for p in self.playersList: sum = sum + p[2].GetPerformance("M", p[0], p[1])
         return int(sum)
 
     def GetDefense(self):
@@ -91,9 +86,7 @@ class Formation(object):
         # p[1] --> side
         # p[2] --> player
         sum = 0
-        for p in self.playersList:
-            if p[0] in ["D"]: sum = sum + p[2].GetPerformance(p[0], p[1])*2
-            if p[0] in ["M"]: sum = sum + p[2].GetPerformance(p[0], p[1])/2
+        for p in self.playersList: sum = sum + p[2].GetPerformance("D", p[0], p[1])
         return int(sum)
 
     def GetGoalkeep(self):
@@ -101,15 +94,14 @@ class Formation(object):
         # p[1] --> side
         # p[2] --> player
         sum = 0
-        for p in self.playersList:
-            if p[0] == "GK": sum = sum + p[2].GetPerformance(p[0], p[1])*2
+        for p in self.playersList: sum = sum + p[2].GetPerformance("GK", p[0], p[1])
         return int(sum)
 
 class F442(Formation):
     def __init__(self):
         super().__init__()
         self.module = "4-4-2"
-        self.dummy = Player(["GK", "D", "M", "A"], ["L", "R", "C"], 0)
+        self.dummy = Player(0, 0, 0, 0, ["GK", "D", "M", "A"], ["L", "R", "C"])
         self.Add("GK", "", self.dummy)
         self.Add("D", "L", self.dummy)
         self.Add("D", "C", self.dummy)
@@ -126,7 +118,7 @@ class F433(Formation):
     def __init__(self):
         super().__init__()
         self.module = "4-3-3"
-        self.dummy = Player(["GK", "D", "M", "A"], ["L", "R", "C"], 0)
+        self.dummy = Player(0, 0, 0, 0, ["GK", "D", "M", "A"], ["L", "R", "C"])
         self.Add("GK", "", self.dummy)
         self.Add("D", "L", self.dummy)
         self.Add("D", "C", self.dummy)
@@ -143,7 +135,7 @@ class F451(Formation):
     def __init__(self):
         super().__init__()
         self.module = "4-5-1"
-        self.dummy = Player(["GK", "D", "M", "A"], ["L", "R", "C"], 0)
+        self.dummy = Player(0, 0, 0, 0, ["GK", "D", "M", "A"], ["L", "R", "C"])
         self.Add("GK", "", self.dummy)
         self.Add("D", "L", self.dummy)
         self.Add("D", "C", self.dummy)
@@ -160,7 +152,7 @@ class F352(Formation):
     def __init__(self):
         super().__init__()
         self.module = "3-5-2"
-        self.dummy = Player(["GK", "D", "M", "A"], ["L", "R", "C"], 0)
+        self.dummy = Player(0, 0, 0, 0, ["GK", "D", "M", "A"], ["L", "R", "C"])
         self.Add("GK", "", self.dummy)
         self.Add("D", "C", self.dummy)
         self.Add("D", "C", self.dummy)
@@ -177,7 +169,7 @@ class F532(Formation):
     def __init__(self):
         super().__init__()
         self.module = "5-3-2"
-        self.dummy = Player(["GK", "D", "M", "A"], ["L", "R", "C"], 0)
+        self.dummy = Player(0, 0, 0, 0, ["GK", "D", "M", "A"], ["L", "R", "C"])
         self.Add("GK", "", self.dummy)
         self.Add("D", "L", self.dummy)
         self.Add("D", "C", self.dummy)

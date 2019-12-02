@@ -19,7 +19,6 @@ class League(object):
     def __init__(self):
         team1 = Club("Juventus FC")
         tactics, players = Juventus()
-
         team1.SelectTeam(tactics, players)
 
         tactics, players = Internazionale()
