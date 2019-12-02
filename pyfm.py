@@ -17,42 +17,46 @@ from serieA import *
 
 class League(object):
     def __init__(self):
-        tactics, chariness, players = Juventus()
-        team1 = Club("Juventus FC")
+        name, tactics, chariness, players = Juventus()
+        team1 = Club(name)
         team1.SelectTeam(tactics, chariness, players)
 
-        tactics, chariness, players = Internazionale()
-        team2 = Club("FC Inter Milan")
+        name, tactics, chariness, players = Internazionale()
+        team2 = Club(name)
         team2.SelectTeam(tactics, chariness, players)
 
-        tactics, chariness, players = Napoli()
-        team3 = Club("SSC Napoli")
+        name, tactics, chariness, players = Napoli()
+        team3 = Club(name)
         team3.SelectTeam(tactics, chariness, players)
 
-        tactics, chariness, players = Roma()
-        team4 = Club("AS Roma")
+        name, tactics, chariness, players = Roma()
+        team4 = Club(name)
         team4.SelectTeam(tactics, chariness, players)
 
-        tactics, chariness, players = Spal()
-        team5 = Club("S.P.A.L.")
+        name, tactics, chariness, players = Spal()
+        team5 = Club(name)
         team5.SelectTeam(tactics, chariness, players)
 
-        tactics, chariness, players = Brescia()
-        team6 = Club("Brescia Calcio")
+        name, tactics, chariness, players = Brescia()
+        team6 = Club(name)
         team6.SelectTeam(tactics, chariness, players)
 
-        self.board = [team1, team2, team3, team4, team5, team6]
+        name, tactics, chariness, players = Cagliari()
+        team7 = Club(name)
+        team7.SelectTeam(tactics, chariness, players)
+
+        self.board = [team1, team2, team3, team4, team5, team6, team7]
         self.scorerRanking = []
 
     def ShowIntro(self, teamHome, teamAway):
         stats1 = teamHome.formation.GetPlayerStats()
         stats2 = teamAway.formation.GetPlayerStats()
         print(stats1[0] + " vs. " + stats2[0])
-        #time.sleep(5)
+        time.sleep(5)
         for line in stats1: print(line)
-        #time.sleep(5)
+        time.sleep(5)
         for line in stats2: print(line)
-        #time.sleep(5)
+        time.sleep(5)
         print()
 
     def ShowStats(self, stats1, stats2, t1, t2):

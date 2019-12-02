@@ -13,6 +13,7 @@ from player import Player
 from formation import *
 
 def Juventus():
+    name = "Juventus FC"
     tactics = F433
     chariness = 2
     # Ratings:   A   M   D   GK
@@ -27,9 +28,10 @@ def Juventus():
     p9  = Player(95, 86, 70, 0, "A", ["L", "R", "C"], "Cristiano Ronaldo")
     p10 = Player(89, 80, 55, 0, "A", "C", "Higuain")
     p11 = Player(91, 84, 61, 0, "A", ["L", "R", "C"], "Dybala")
-    return tactics, chariness, [p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11]
+    return name, tactics, chariness, [p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11]
 
 def Internazionale():
+    name = "FC Inter Milan"
     tactics = F352
     chariness = 2
     # Ratings:   A   M   D   GK
@@ -44,9 +46,10 @@ def Internazionale():
     p9  = Player(70, 82, 51, 0, "M", "R", "Candreva")
     p10 = Player(85, 80, 53, 0, "A", ["L", "R", "C"], "Lautaro Martinez")
     p11 = Player(88, 71, 55, 0, "A", "C", "Lukaku")
-    return tactics, chariness, [p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11]
+    return name, tactics, chariness, [p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11]
 
 def Napoli():
+    name = "SSC Napoli"
     tactics = F442
     chariness = 2
     # Ratings:   A   M   D   GK
@@ -61,9 +64,10 @@ def Napoli():
     p9  = Player(75, 83, 66, 0, "M", ["R", "C"], "Fabian Ruiz")
     p10 = Player(82, 82, 23, 0, "A", ["L", "C"], "Insigne")
     p11 = Player(88, 81, 44, 0, "A", ["L", "R", "C"], "Mertens")
-    return tactics, chariness, [p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11]
+    return name, tactics, chariness, [p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11]
 
 def Roma():
+    name = "AS Roma"
     tactics = F451
     chariness = 2
     # Ratings:   A   M   D   GK
@@ -78,9 +82,10 @@ def Roma():
     p9  = Player(72, 83, 69, 0, "M", ["R", "C"], "Veretout")
     p10 = Player(76, 86, 32, 0, ["M", "A"], "R", "Zaniolo")
     p11 = Player(82, 65, 29, 0, "A", "C", "Dzeko")
-    return tactics, chariness, [p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11]
+    return name, tactics, chariness, [p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11]
 
 def Spal():
+    name = "S.P.A.L."
     tactics = F532
     chariness = 3
     # Ratings:   A   M   D   GK
@@ -95,9 +100,10 @@ def Spal():
     p9  = Player(60, 77, 39, 0, ["D", "M"], "C", "Valdifiori")
     p10 = Player(72, 65, 40, 0, "A", "C", "Floccari")
     p11 = Player(83, 54, 33, 0, "A", "C", "Petagna")
-    return tactics, chariness, [p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11]
+    return name, tactics, chariness, [p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11]
 
 def Brescia():
+    name = "Brescia Calcio"
     tactics = F352
     chariness = 3
     # Ratings:   A   M   D   GK
@@ -112,7 +118,25 @@ def Brescia():
     p9  = Player(64, 73, 32, 0, "M", "R", "Martella")
     p10 = Player(65, 45, 39, 0, "A", "C", "Torregrossa")
     p11 = Player(84, 30, 12, 0, "A", "C", "Balotelli")
-    return tactics, chariness, [p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11]
+    return name, tactics, chariness, [p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11]
+
+def Cagliari():
+    name = "Cagliari Calcio"
+    tactics = F442
+    chariness = 2
+    # Ratings:   A   M   D   GK
+    p1  = Player(10, 10, 33, 73, "GK", "", "Rafael")
+    p2  = Player(32, 35, 68, 0, "D", "L", "Faragò")
+    p3  = Player(32, 35, 54, 0, "D", "C", "Klavan")
+    p4  = Player(29, 47, 65, 0, "D", "C", "Piscane")
+    p5  = Player(30, 56, 75, 0, "D", "R", "Luca Pellegrini")
+    p6  = Player(63, 80, 55, 0, "M", ["L", "C"], "Nandez")
+    p7  = Player(64, 83, 72, 0, "M", "C", "Cigarini")
+    p8  = Player(77, 89, 70, 0, "M", ["R", "C"], "Nainggolan")
+    p9  = Player(60, 79, 55, 0, "M", ["R", "C"], "Rog")
+    p10 = Player(77, 80, 42, 0, "A", "C", "Joao Pedro")
+    p11 = Player(75, 70, 52, 0, "A", "C", "Simeone")
+    return name, tactics, chariness, [p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11]
 
 if __name__ == '__main__':
     pass

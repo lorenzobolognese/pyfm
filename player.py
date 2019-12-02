@@ -22,7 +22,7 @@ class Player(object):
     def GetStats(self, fieldRole, fieldSide):
         if fieldRole in self.role: r = 100
         else: r = 50
-        if fieldSide in self.side: p = 100
+        if (fieldRole == "GK") or (fieldSide in self.side): p = 100
         else: p = 50
         return self.rateA*(r/100)*(p/100), self.rateM*(r/100)*(p/100), self.rateD*(r/100)*(p/100), self.rateGK*(r/100)*(p/100)
 
