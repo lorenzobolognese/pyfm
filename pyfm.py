@@ -106,19 +106,19 @@ class League(object):
             for t2 in self.board:
                 if t2 is not t1:
                     match = Match(t1, t2)
-                    #self.ShowIntro(t1, t2)
+                    self.ShowIntro(t1, t2)
                     match.start()
 
                     while (match.isPlaying == True) or (match.isLogEmpty() == False):
                         msg = match.GetLog()
-                        #print(msg)
-                        #time.sleep(0.25)
+                        print(msg)
+                        time.sleep(0.25)
 
                     stats1, stats2, scorer = match.GetStats()
                     self.ShowStats(stats1, stats2, t1, t2)
                     self.UpdateTable(t1, stats1, t2, stats2)
                     self.UpdateScorerRank(scorer)
-        self.ShowTable()
+                    self.ShowTable()
 
 def main():
     championship = League()
