@@ -14,6 +14,14 @@ import time
 from queue import Queue
 from threading import Thread
 
+MATCH_EVENT_NOTHING_HAPPENED = 0
+MATCH_EVENT_HOME_TEAM_GOAL = 1
+MATCH_EVENT_HOME_TEAM_ATTACK_STOPPED = -10
+MATCH_EVENT_HOME_TEAM_SHOOT_SAVED = -11
+MATCH_EVENT_AWAY_TEAM_GOAL = 2
+MATCH_EVENT_AWAY_TEAM_ATTACK_STOPPED = -20
+MATCH_EVENT_AWAY_TEAM_SHOOT_SAVED = -21
+
 class Match(Thread):
     def __init__(self, team1, team2):
         super().__init__()
@@ -74,53 +82,56 @@ class Match(Thread):
         draw = ((chariness1 + weather) * overAll1) + ((chariness2 + weather) * overAll2)
 
         stats = random.randint(0, draw + midfield1 + midfield2)
-        if (stats < draw): return 0, "", ""
+        if (stats < draw): return MATCH_EVENT_NOTHING_HAPPENED, "", ""
         elif (stats < draw + midfield1): res = 1
         else: res = 2
 
+        # Home team attacking...
         if (res == 1):
             stats = random.randint(0, attack1 + defense2)
             if (stats < attack1):
                 strike, role, name = self.f1.GetStrike()
                 stats = random.randint(0, strike + goalkeep2)
-                if (stats < strike): return 1, role, name
-                else: return -11, role, name
-            else: return -10, "", ""
+                if (stats < strike): return MATCH_EVENT_HOME_TEAM_GOAL, role, name
+                else: return MATCH_EVENT_HOME_TEAM_SHOOT_SAVED, role, name
+            else: return MATCH_EVENT_HOME_TEAM_ATTACK_STOPPED, "", ""
+
+        # Away team attacking...
         elif (res == 2):
             stats = random.randint(0, attack2 + defense1)
             if (stats < attack2):
                 strike, role, name = self.f2.GetStrike()
                 stats = random.randint(0, strike + goalkeep1)
-                if (stats < strike): return 2, role, name
-                else: return -21, role, name
-            else: return -20, "", ""
+                if (stats < strike): return MATCH_EVENT_AWAY_TEAM_GOAL, role, name
+                else: return MATCH_EVENT_AWAY_TEAM_SHOOT_SAVED, role, name
+            else: return MATCH_EVENT_AWAY_TEAM_ATTACK_STOPPED, "", ""
 
     def run(self):
         self.isPlaying = True
         for minute in range(1, 91):
             res, role, name = self.Challenge()
-            if res == 0: self.log.put("Minute:" + str(minute) + " --> " + str(self.goal1) + " - " + str(self.goal2))
-            if res == -10:
+            if res == MATCH_EVENT_NOTHING_HAPPENED: self.log.put("Minute:" + str(minute) + " --> " + str(self.goal1) + " - " + str(self.goal2))
+            if res == MATCH_EVENT_HOME_TEAM_ATTACK_STOPPED:
                 self.offense1 = self.offense1 + 1
                 self.log.put("Minute:" + str(minute) + " --> " + self.f1.name + " ATTACK STOPPED --> " + self.f1.name + " vs. " + self.f2.name + ": " + str(self.goal1) + " - " + str(self.goal2))
-            if res == -11:
+            if res == MATCH_EVENT_HOME_TEAM_SHOOT_SAVED:
                 self.offense1 = self.offense1 + 1
                 self.shoot1 = self.shoot1 + 1
                 self.log.put("Minute:" + str(minute) + " --> " + name + " (" + role + "), " + self.f1.name + " SHOOT SAVED --> " + self.f1.name + " vs. " + self.f2.name + ": " + str(self.goal1) + " - " + str(self.goal2))
-            if res == -20:
+            if res == MATCH_EVENT_AWAY_TEAM_ATTACK_STOPPED:
                 self.offense2 = self.offense2 + 1
                 self.log.put("Minute:" + str(minute) + " --> " + self.f2.name + " ATTACK STOPPED --> " + self.f1.name + " vs. " + self.f2.name + ": " + str(self.goal1) + " - " + str(self.goal2))
-            if res == -21:
+            if res == MATCH_EVENT_AWAY_TEAM_SHOOT_SAVED:
                 self.offense2 = self.offense2 + 1
                 self.shoot2 = self.shoot2 + 1
                 self.log.put("Minute:" + str(minute) + " --> " + name + " (" + role +  "), " + self.f2.name + " SHOOT SAVED --> " + self.f1.name + " vs. " + self.f2.name + ": " + str(self.goal1) + " - " + str(self.goal2))
-            if res == 1:
+            if res == MATCH_EVENT_HOME_TEAM_GOAL:
                 self.offense1 = self.offense1 + 1
                 self.shoot1 = self.shoot1 + 1
                 self.goal1 = self.goal1 + 1
                 self.UpdatePlayerStats(name, self.f1.name)
                 self.log.put("Minute:" + str(minute) + " --> " + name + " (" + role + "), GOAL " + self.f1.name + "!!! --> " + self.f1.name + " vs. " + self.f2.name + ": " + str(self.goal1) + " - " + str(self.goal2))
-            if res == 2:
+            if res == MATCH_EVENT_AWAY_TEAM_GOAL:
                 self.offense2 = self.offense2 + 1
                 self.shoot2 = self.shoot2 + 1
                 self.goal2 = self.goal2 + 1

@@ -15,7 +15,7 @@ from formation import *
 def Juventus():
     name = "Juventus FC"
     tactics = F433
-    chariness = 2
+    chariness = 1
     # Ratings:   A   M   D   GK
     p1  = Player(10, 37, 58, 87, "GK", "", "Szczęsny")
     p2  = Player(60, 76, 84, 0, "D", "L", "Alex Sandro")
@@ -33,7 +33,7 @@ def Juventus():
 def Internazionale():
     name = "FC Inter Milan"
     tactics = F352
-    chariness = 2
+    chariness = 1
     # Ratings:   A   M   D   GK
     p1  = Player(10, 28, 49, 90, "GK", "", "Handanovic")
     p2  = Player(61, 47, 85, 0, "D", ["R", "C"], "De Vrij")
@@ -69,7 +69,7 @@ def Napoli():
 def Roma():
     name = "AS Roma"
     tactics = F451
-    chariness = 2
+    chariness = 1
     # Ratings:   A   M   D   GK
     p1  = Player(10, 23, 36, 79, "GK", "", "Lopez")
     p2  = Player(47, 54, 76, 0, "D", "L", "Spinazzola")
