@@ -127,6 +127,23 @@ class F442(Formation):
         self.Add("A", "C", self.dummy)
         self.Add("A", "C", self.dummy)
 
+class F424(Formation):
+    def __init__(self):
+        super().__init__()
+        self.module = "4-2-4"
+        self.dummy = Player(0, 0, 0, 0, ["GK", "D", "M", "A"], ["L", "R", "C"])
+        self.Add("GK", "", self.dummy)
+        self.Add("D", "L", self.dummy)
+        self.Add("D", "C", self.dummy)
+        self.Add("D", "C", self.dummy)
+        self.Add("D", "R", self.dummy)
+        self.Add("M", "C", self.dummy)
+        self.Add("M", "C", self.dummy)
+        self.Add("A", "L", self.dummy)
+        self.Add("A", "C", self.dummy)
+        self.Add("A", "C", self.dummy)
+        self.Add("A", "R", self.dummy)
+
 class F433(Formation):
     def __init__(self):
         super().__init__()
@@ -159,6 +176,23 @@ class F451(Formation):
         self.Add("M", "C", self.dummy)
         self.Add("M", "C", self.dummy)
         self.Add("M", "R", self.dummy)
+        self.Add("A", "C", self.dummy)
+
+class F343(Formation):
+    def __init__(self):
+        super().__init__()
+        self.module = "3-4-3"
+        self.dummy = Player(0, 0, 0, 0, ["GK", "D", "M", "A"], ["L", "R", "C"])
+        self.Add("GK", "", self.dummy)
+        self.Add("D", "C", self.dummy)
+        self.Add("D", "C", self.dummy)
+        self.Add("D", "C", self.dummy)
+        self.Add("M", "L", self.dummy)
+        self.Add("M", "C", self.dummy)
+        self.Add("M", "C", self.dummy)
+        self.Add("M", "R", self.dummy)
+        self.Add("A", "C", self.dummy)
+        self.Add("A", "C", self.dummy)
         self.Add("A", "C", self.dummy)
 
 class F352(Formation):

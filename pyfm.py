@@ -15,11 +15,15 @@ from club import Club
 from formation import *
 from serieA import *
 
-MATCH_INTRO_SPEED_TIMEOUT = 0.0
-MATCH_COMMENTARY_SPEED_TIMEOUT = 0.0
+MATCH_INTRO_SPEED_TIMEOUT = 5.0
+MATCH_COMMENTARY_SPEED_TIMEOUT = 0.25
 
 class League(object):
     def __init__(self):
+        name, tactics, chariness, players = Atalanta()
+        team0 = Club(name)
+        team0.SelectTeam(tactics, chariness, players)
+
         name, tactics, chariness, players = Juventus()
         team1 = Club(name)
         team1.SelectTeam(tactics, chariness, players)
@@ -48,7 +52,7 @@ class League(object):
         team7 = Club(name)
         team7.SelectTeam(tactics, chariness, players)
 
-        self.board = [team1, team2, team3, team4, team5, team6, team7]
+        self.board = [team0, team1, team2, team3, team4, team5, team6, team7]
         self.scorerRanking = []
 
     def ShowIntro(self, teamHome, teamAway):
