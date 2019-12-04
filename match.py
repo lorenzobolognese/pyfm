@@ -23,10 +23,11 @@ MATCH_EVENT_AWAY_TEAM_ATTACK_STOPPED = -20
 MATCH_EVENT_AWAY_TEAM_SHOOT_SAVED = -21
 
 class Match(Thread):
-    def __init__(self, team1, team2):
+    def __init__(self, team1, team2, isNeutralField = True):
         super().__init__()
         self.f1 = team1.formation
         self.f2 = team2.formation
+        self.isNeutralField = isNeutralField
         self.log = Queue()
         self.isPlaying = True
 
@@ -64,10 +65,10 @@ class Match(Thread):
         self.scorerList = temp
 
     def Challenge(self):
-        overAll1 = self.f1.GetOverall()
-        attack1 = self.f1.GetAttack()
-        midfield1 = self.f1.GetMidfield()
-        defense1 = self.f1.GetDefense()
+        overAll1 = self.f1.GetOverall() + int(self.isNeutralField) * self.f1.GetHomeBonus("ALL")
+        attack1 = self.f1.GetAttack() + int(self.isNeutralField) * self.f1.GetHomeBonus("A")
+        midfield1 = self.f1.GetMidfield() + int(self.isNeutralField) * self.f1.GetHomeBonus("M")
+        defense1 = self.f1.GetDefense() + int(self.isNeutralField) * self.f1.GetHomeBonus("D")
         goalkeep1 = self.f1.GetGoalkeep()
         chariness1 = self.f1.GetChariness()
 

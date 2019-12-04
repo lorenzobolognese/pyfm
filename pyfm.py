@@ -110,7 +110,7 @@ class League(object):
         for t1 in self.board:
             for t2 in self.board:
                 if t2 is not t1:
-                    match = Match(t1, t2)
+                    match = Match(t1, t2, isNeutralField = False)
                     self.ShowIntro(t1, t2)
                     match.start()
 

@@ -108,6 +108,13 @@ class Formation(object):
         for p in self.playersList: sum = sum + p[2].GetPerformance("GK", p[0], p[1])
         return int(sum)
 
+    def GetHomeBonus(self, zone):
+        if zone == "A": power = self.GetAttack()/11
+        if zone == "M": power = self.GetMidfield()/11
+        if zone == "D": power = self.GetDefense()/11
+        if zone == "ALL": power = self.GetOverall()/11
+        return int(power)
+
     def GetChariness(self):
         return self.chariness
 
