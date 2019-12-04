@@ -10,14 +10,17 @@
 #-------------------------------------------------------------------------------
 
 class Player(object):
-    def __init__(self, rateA, rateM, rateD, rateGK, role, side, name = "John Doe"):
+    def __init__(self, rateA, rateM, rateD, rateGK, stamina, role, side, name = "John Doe"):
         self.role = role
         self.side = side
         self.rateA = rateA
         self.rateM = rateM
         self.rateD = rateD
         self.rateGK = rateGK
+        self.stamina = stamina
         self.name = name
+
+        self.ResetEnergy()
 
     def GetStats(self, fieldRole, fieldSide):
         if fieldRole in self.role: r = 100
@@ -34,6 +37,15 @@ class Player(object):
         if zone == "GK": power = gk
         if zone == "ALL": power = a + m + d + gk
         return power
+
+    def ResetEnergy(self):
+        self.energy = self.stamina
+
+    def SetEnergy(self):
+        if (self.energy > 0): self.energy = self.energy - 1
+
+    def GetEnergy(self):
+        return self.energy
 
 if __name__ == '__main__':
     pass

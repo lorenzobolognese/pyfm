@@ -23,22 +23,16 @@ class League(object):
     def __init__(self):
         self.scorerRanking = []
         self.board = []
-        for item in SERIEA:
-            name, tactics, chariness, roster = item()
-            playing = Coach(tactics, roster)
-            subscribing = Club(name)
-            subscribing.SelectTeam(tactics, chariness, playing)
-            self.board.append(subscribing)
-
-    def ShowTeams(self):
-        for t in self.board:
-            stats = t.formation.GetPlayerStats()
-            for line in stats: print(line)
+        for challenger in SERIEA:
+            name, tactics, chariness, roster = challenger()
+            subscribe = Club(name, tactics, chariness, roster)
+            self.board.append(subscribe)
 
     def ShowIntro(self, teamHome, teamAway):
-        stats1 = teamHome.formation.GetPlayerStats()
-        stats2 = teamAway.formation.GetPlayerStats()
-        print(stats1[0] + " vs. " + stats2[0])
+        stats1 = teamHome.tactics.GetPlayerStats()
+        stats2 = teamAway.tactics.GetPlayerStats()
+        print(teamHome.name + " vs. " + teamAway.name)
+        print(teamHome.tactics.module + " vs. " + teamAway.tactics.module)
         time.sleep(MATCH_INTRO_SPEED_TIMEOUT)
         for line in stats1: print(line)
         time.sleep(MATCH_INTRO_SPEED_TIMEOUT)
@@ -47,15 +41,16 @@ class League(object):
         print()
 
     def ShowStats(self, stats1, stats2, t1, t2):
-        name1 = t1.formation.GetPlayerStats()
-        name2 = t2.formation.GetPlayerStats()
+        name1 = t1.tactics.GetPlayerStats()
+        name2 = t2.tactics.GetPlayerStats()
         print(name1[0] + " vs. " + name2[0])
         print(stats1)
         print(stats2)
 
     def ShowTable(self):
         table = []
-        for item in self.board: table.append((item.team.name, item.points, item.played, item.won, item.draw, item.lost, item.goalFor, item.goalAgainst))
+        for item in self.board:
+            table.append((item.name, item.points, item.played, item.won, item.draw, item.lost, item.goalFor, item.goalAgainst))
         print("CHAMPIONSHIP BOARD")
         teams = sorted(table, reverse=True, key=lambda parameter: parameter[1])
         for t in teams: print(t)
@@ -107,11 +102,20 @@ class League(object):
         self.scorerRanking = temp
 
     def Play(self):
-        for t1 in self.board:
-            for t2 in self.board:
-                if t2 is not t1:
-                    match = Match(t1, t2, isNeutralField = False)
-                    self.ShowIntro(t1, t2)
+        for club1 in self.board:
+            for club2 in self.board:
+                if club2 is not club1:
+                    # Home team
+                    playing = Coach(club1.tactics, club1.roster)
+                    club1.SelectTeam(club1.tactics, club1.chariness, playing)
+
+                    # Away team
+                    playing = Coach(club2.tactics, club2.roster)
+                    club2.SelectTeam(club2.tactics, club2.chariness, playing)
+
+                    # Play match
+                    match = Match(club1, club2, isNeutralField = False)
+                    self.ShowIntro(club1, club2)
                     match.start()
 
                     while (match.isPlaying == True) or (match.isLogEmpty() == False):
@@ -120,14 +124,13 @@ class League(object):
                         time.sleep(MATCH_COMMENTARY_SPEED_TIMEOUT)
 
                     stats1, stats2, scorer = match.GetStats()
-                    self.ShowStats(stats1, stats2, t1, t2)
-                    self.UpdateTable(t1, stats1, t2, stats2)
+                    self.ShowStats(stats1, stats2, club1, club2)
+                    self.UpdateTable(club1, stats1, club2, stats2)
                     self.UpdateScorerRank(scorer)
                     self.ShowTable()
 
 def main():
     championship = League()
-    #championship.ShowTeams()
     championship.Play()
 
 if __name__ == '__main__':

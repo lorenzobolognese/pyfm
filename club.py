@@ -9,14 +9,13 @@
 # Licence:     MIT
 #-------------------------------------------------------------------------------
 
-from team import Team
-from formation import Formation
-
 class Club(object):
-    def __init__(self, name = ""):
-        self.team = Team(name)
-        self.formation = Formation()
-        self.chariness = 0
+    def __init__(self, name, tactics, chariness, roster):
+        self.name = name
+        self.tactics = tactics()
+        self.chariness = chariness
+        self.roster = roster
+
         self.played = 0
         self.draw = 0
         self.won = 0
@@ -26,9 +25,8 @@ class Club(object):
         self.goalAgainst = 0
 
     def SelectTeam(self, tactics, chariness, playersList):
-        self.team.Add(playersList)
-        self.formation = tactics()
-        self.formation.Set(self.team, chariness)
+        self.tactics = tactics
+        self.tactics.Set(playersList, chariness)
 
 if __name__ == '__main__':
     pass

@@ -25,8 +25,8 @@ MATCH_EVENT_AWAY_TEAM_SHOOT_SAVED = -21
 class Match(Thread):
     def __init__(self, team1, team2, isNeutralField = True):
         super().__init__()
-        self.f1 = team1.formation
-        self.f2 = team2.formation
+        self.f1 = team1.tactics
+        self.f2 = team2.tactics
         self.isNeutralField = isNeutralField
         self.log = Queue()
         self.isPlaying = True

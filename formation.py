@@ -15,7 +15,7 @@ from player import Player
 class Formation(object):
     def __init__(self):
         self.playersList = []
-        self.dummy = Player(0, 0, 0, 0, ["GK", "D", "M", "A"], ["L", "R", "C"])
+        self.dummy = Player(0, 0, 0, 0, 0, ["GK", "D", "M", "A"], ["L", "R", "C"])
         self.name = ""
         self.module = ""
         self.chariness = 0
@@ -23,20 +23,18 @@ class Formation(object):
     def Add(self, role, side, player):
         self.playersList.append([role, side, player])
 
-    def Set(self, team, chariness):
-        self.name = team.name
+    def Set(self, playing, chariness):
         self.chariness = chariness
         for i in range(0, 11):
-            r = team.roster[i]
-            self.playersList[i][2] = team.roster[i]
+            self.playersList[i][2] = playing[i]
 
     def GetPlayerStats(self):
         # p[0] --> role
         # p[1] --> side
         # p[2] --> player
-        l = [self.name, self.module]
+        l = []
         for p in self.playersList:
-            l.append(p[0] + p[1] + " " + p[2].name + " --> " + str(p[2].GetStats(p[0], p[1])))
+            l.append(p[0] + p[1] + " " + p[2].name + " --> " + str(p[2].GetStats(p[0], p[1])) + ", Energy = " + str(p[2].GetEnergy()))
         return l
 
     def GetPartyStats(self):
