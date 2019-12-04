@@ -15,6 +15,7 @@ from player import Player
 class Formation(object):
     def __init__(self):
         self.playersList = []
+        self.dummy = Player(0, 0, 0, 0, ["GK", "D", "M", "A"], ["L", "R", "C"])
         self.name = ""
         self.module = ""
         self.chariness = 0
@@ -114,7 +115,6 @@ class F442(Formation):
     def __init__(self):
         super().__init__()
         self.module = "4-4-2"
-        self.dummy = Player(0, 0, 0, 0, ["GK", "D", "M", "A"], ["L", "R", "C"])
         self.Add("GK", "", self.dummy)
         self.Add("D", "L", self.dummy)
         self.Add("D", "C", self.dummy)
@@ -131,7 +131,6 @@ class F424(Formation):
     def __init__(self):
         super().__init__()
         self.module = "4-2-4"
-        self.dummy = Player(0, 0, 0, 0, ["GK", "D", "M", "A"], ["L", "R", "C"])
         self.Add("GK", "", self.dummy)
         self.Add("D", "L", self.dummy)
         self.Add("D", "C", self.dummy)
@@ -148,7 +147,6 @@ class F433(Formation):
     def __init__(self):
         super().__init__()
         self.module = "4-3-3"
-        self.dummy = Player(0, 0, 0, 0, ["GK", "D", "M", "A"], ["L", "R", "C"])
         self.Add("GK", "", self.dummy)
         self.Add("D", "L", self.dummy)
         self.Add("D", "C", self.dummy)
@@ -165,7 +163,6 @@ class F451(Formation):
     def __init__(self):
         super().__init__()
         self.module = "4-5-1"
-        self.dummy = Player(0, 0, 0, 0, ["GK", "D", "M", "A"], ["L", "R", "C"])
         self.Add("GK", "", self.dummy)
         self.Add("D", "L", self.dummy)
         self.Add("D", "C", self.dummy)
@@ -182,7 +179,6 @@ class F343(Formation):
     def __init__(self):
         super().__init__()
         self.module = "3-4-3"
-        self.dummy = Player(0, 0, 0, 0, ["GK", "D", "M", "A"], ["L", "R", "C"])
         self.Add("GK", "", self.dummy)
         self.Add("D", "C", self.dummy)
         self.Add("D", "C", self.dummy)
@@ -199,7 +195,6 @@ class F352(Formation):
     def __init__(self):
         super().__init__()
         self.module = "3-5-2"
-        self.dummy = Player(0, 0, 0, 0, ["GK", "D", "M", "A"], ["L", "R", "C"])
         self.Add("GK", "", self.dummy)
         self.Add("D", "C", self.dummy)
         self.Add("D", "C", self.dummy)
@@ -216,7 +211,6 @@ class F532(Formation):
     def __init__(self):
         super().__init__()
         self.module = "5-3-2"
-        self.dummy = Player(0, 0, 0, 0, ["GK", "D", "M", "A"], ["L", "R", "C"])
         self.Add("GK", "", self.dummy)
         self.Add("D", "L", self.dummy)
         self.Add("D", "C", self.dummy)

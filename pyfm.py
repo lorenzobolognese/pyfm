@@ -12,48 +12,28 @@
 import time
 from match import Match
 from club import Club
+from coach import Coach
 from formation import *
-from serieA import *
+from serieA import SERIEA
 
-MATCH_INTRO_SPEED_TIMEOUT = 5.0
-MATCH_COMMENTARY_SPEED_TIMEOUT = 0.25
+MATCH_INTRO_SPEED_TIMEOUT = 0.0
+MATCH_COMMENTARY_SPEED_TIMEOUT = 0.0
 
 class League(object):
     def __init__(self):
-        name, tactics, chariness, players = Atalanta()
-        team0 = Club(name)
-        team0.SelectTeam(tactics, chariness, players)
-
-        name, tactics, chariness, players = Juventus()
-        team1 = Club(name)
-        team1.SelectTeam(tactics, chariness, players)
-
-        name, tactics, chariness, players = Internazionale()
-        team2 = Club(name)
-        team2.SelectTeam(tactics, chariness, players)
-
-        name, tactics, chariness, players = Napoli()
-        team3 = Club(name)
-        team3.SelectTeam(tactics, chariness, players)
-
-        name, tactics, chariness, players = Roma()
-        team4 = Club(name)
-        team4.SelectTeam(tactics, chariness, players)
-
-        name, tactics, chariness, players = Spal()
-        team5 = Club(name)
-        team5.SelectTeam(tactics, chariness, players)
-
-        name, tactics, chariness, players = Brescia()
-        team6 = Club(name)
-        team6.SelectTeam(tactics, chariness, players)
-
-        name, tactics, chariness, players = Cagliari()
-        team7 = Club(name)
-        team7.SelectTeam(tactics, chariness, players)
-
-        self.board = [team0, team1, team2, team3, team4, team5, team6, team7]
         self.scorerRanking = []
+        self.board = []
+        for item in SERIEA:
+            name, tactics, chariness, roster = item()
+            playing = Coach(tactics, roster)
+            subscribing = Club(name)
+            subscribing.SelectTeam(tactics, chariness, playing)
+            self.board.append(subscribing)
+
+    def ShowTeams(self):
+        for t in self.board:
+            stats = t.formation.GetPlayerStats()
+            for line in stats: print(line)
 
     def ShowIntro(self, teamHome, teamAway):
         stats1 = teamHome.formation.GetPlayerStats()
@@ -126,7 +106,7 @@ class League(object):
             if found == False: temp.append((new[0], new[1], new[2]))
         self.scorerRanking = temp
 
-    def Play(self, howMany):
+    def Play(self):
         for t1 in self.board:
             for t2 in self.board:
                 if t2 is not t1:
@@ -147,7 +127,8 @@ class League(object):
 
 def main():
     championship = League()
-    championship.Play(1)
+    #championship.ShowTeams()
+    championship.Play()
 
 if __name__ == '__main__':
     main()
