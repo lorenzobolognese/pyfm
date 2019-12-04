@@ -9,7 +9,7 @@
 # Licence:     MIT
 #-------------------------------------------------------------------------------
 
-from serieA import SERIEA, Roma
+from serieA import SERIEA
 
 def Coach(tactics, roster):
     playing = []
