@@ -40,10 +40,8 @@ class League(object):
         time.sleep(MATCH_INTRO_SPEED_TIMEOUT)
         print()
 
-    def ShowStats(self, stats1, stats2, t1, t2):
-        name1 = t1.tactics.GetPlayerStats()
-        name2 = t2.tactics.GetPlayerStats()
-        print(name1[0] + " vs. " + name2[0])
+    def ShowStats(self, stats1, stats2, teamHome, teamAway):
+        print(teamHome.name + " vs. " + teamAway.name)
         print(stats1)
         print(stats2)
 
