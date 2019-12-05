@@ -14,6 +14,7 @@ from match import Match
 from club import Club
 from coach import Coach
 from formation import *
+from berger import Draw
 from serieA import SERIEA
 
 MATCH_MASKS_TIMEOUT = 5.0
@@ -45,7 +46,7 @@ class League(object):
     def ShowStats(self, statsHome, statsAway, teamHome, teamAway, timeout):
         print(" ---> Final whistle <---")
         print()
-        print("MATCH STATS [attempts, shoots, goals]")
+        print("MATCH STATS (attempts, shoots, goals)")
         print(teamHome.name + ": " + str(statsHome))
         print(teamAway.name + ": " + str(statsAway))
         print()
@@ -53,12 +54,12 @@ class League(object):
 
     def ShowTable(self, timeout):
         table = []
-        for item in self.board:
-            table.append((item.name, item.points, item.played, item.won, item.draw, item.lost, item.goalFor, item.goalAgainst))
+        for item in self.board: table.append((item.name, item.points, item.played, item.won, item.draw, item.lost, item.goalFor, item.goalAgainst))
         print("CHAMPIONSHIP BOARD")
         teams = sorted(table, reverse=True, key=lambda parameter: parameter[1])
         for t in teams: print(t)
         print()
+        time.sleep(timeout)
         print("STRIKERS")
         scorers = sorted(self.scorerRanking, reverse=True, key=lambda parameter: parameter[2])
         for p in scorers: print(p)
@@ -107,32 +108,42 @@ class League(object):
         self.scorerRanking = temp
 
     def Play(self):
-        for club1 in self.board:
-            for club2 in self.board:
-                if club2 is not club1:
-                    # Home team
-                    playing = Coach(club1.tactics, club1.roster)
-                    club1.SelectTeam(club1.tactics, club1.chariness, playing)
+        rounds = Draw(self.board)
+        for i in range (0, len(rounds)):
+            self.ShowRound(rounds, int(len(self.board)/2), i)
+            club1 = rounds[i][0]
+            club2 = rounds[i][1]
 
-                    # Away team
-                    playing = Coach(club2.tactics, club2.roster)
-                    club2.SelectTeam(club2.tactics, club2.chariness, playing)
+            # Home team
+            playing = Coach(club1.tactics, club1.roster)
+            club1.SelectTeam(club1.tactics, club1.chariness, playing)
 
-                    # Play match
-                    match = Match(club1, club2, isNeutralField = False)
-                    self.ShowIntro(club1, club2, MATCH_MASKS_TIMEOUT)
-                    match.start()
+            # Away team
+            playing = Coach(club2.tactics, club2.roster)
+            club2.SelectTeam(club2.tactics, club2.chariness, playing)
 
-                    while (match.isPlaying == True) or (match.isLogEmpty() == False):
-                        msg = match.GetLog()
-                        print(msg)
-                        time.sleep(MATCH_COMMENTARY_SPEED_TIMEOUT)
+            # Play match
+            match = Match(club1, club2, isNeutralField = False)
+            self.ShowIntro(club1, club2, MATCH_MASKS_TIMEOUT)
+            match.start()
 
-                    stats1, stats2, scorer = match.GetStats()
-                    self.ShowStats(stats1, stats2, club1, club2, MATCH_MASKS_TIMEOUT)
-                    self.UpdateTable(club1, stats1, club2, stats2)
-                    self.UpdateScorerRank(scorer)
-                    self.ShowTable(MATCH_MASKS_TIMEOUT)
+            while (match.isPlaying == True) or (match.isLogEmpty() == False):
+                msg = match.GetLog()
+                print(msg)
+                time.sleep(MATCH_COMMENTARY_SPEED_TIMEOUT)
+
+            stats1, stats2, scorer = match.GetStats()
+            self.ShowStats(stats1, stats2, club1, club2, MATCH_MASKS_TIMEOUT)
+            self.UpdateTable(club1, stats1, club2, stats2)
+            self.UpdateScorerRank(scorer)
+            self.ShowTable(MATCH_MASKS_TIMEOUT)
+
+    def ShowRound(self, rounds, matches, idx):
+        if (idx % matches) == 0:
+            print("ROUND " + str((int(idx/matches))+1))
+            for i in range(0, matches):
+                print(rounds[idx+i][0].name, rounds[idx+i][1].name)
+            time.sleep(5)
 
 def main():
     championship = League()
