@@ -15,28 +15,27 @@ from player import Player
 class Formation(object):
     def __init__(self):
         self.playersList = []
-        self.dummy = Player(0, 0, 0, 0, ["GK", "D", "M", "A"], ["L", "R", "C"])
+        self.dummy = Player(0, 0, 0, 0, 0, ["GK", "D", "M", "A"], ["L", "R", "C"])
         self.name = ""
         self.module = ""
+        self.lastStriker = None
         self.chariness = 0
 
     def Add(self, role, side, player):
         self.playersList.append([role, side, player])
 
-    def Set(self, team, chariness):
-        self.name = team.name
+    def Set(self, playing, chariness):
         self.chariness = chariness
         for i in range(0, 11):
-            r = team.roster[i]
-            self.playersList[i][2] = team.roster[i]
+            self.playersList[i][2] = playing[i]
 
     def GetPlayerStats(self):
         # p[0] --> role
         # p[1] --> side
         # p[2] --> player
-        l = [self.name, self.module]
+        l = []
         for p in self.playersList:
-            l.append(p[0] + p[1] + " " + p[2].name + " --> " + str(p[2].GetStats(p[0], p[1])))
+            l.append(p[0] + p[1] + " " + p[2].name + " --> " + str(p[2].GetStats(p[0], p[1])) + ", Energy = " + str(p[2].GetEnergy()) + ", Vote = " + str(p[2].GetVote()))
         return l
 
     def GetPartyStats(self):
@@ -47,26 +46,39 @@ class Formation(object):
         l.append(self.GetOverall())
         return l
 
-    def __getFirstPlayerByRoleIndex(self, role):
-        idx = 0
+    def GetPlayer(self, role):
+        temp = 0
+        sum = 0
         for p in self.playersList:
-            if p[0] == role: return idx
-            idx = idx + 1
+            if p[0] == role: sum = sum + p[2].GetPerformance(role, p[0], p[1])
+        whichPlayer = random.randint(0, sum)
+        for p in self.playersList:
+            if p[0] == role: temp = temp + p[2].GetPerformance(role, p[0], p[1])
+            if temp >= whichPlayer: return p
 
-    def GetStrike(self):
+    def AdjustPlayerVote(self, role, direction):
+        p = self.GetPlayer(role)
+        if direction == "UP": p[2].SetVote(0.5)
+        elif direction == "DOWN": p[2].SetVote(-0.5)
+
+    def GetStriker(self):
         # p[0] --> role
         # p[1] --> side
         # p[2] --> player
-        sum = 0
         # Increasing of propability it's a midfielder or attacker to attempt the shoot
-        mid = self.__getFirstPlayerByRoleIndex("M")
-        atk = self.__getFirstPlayerByRoleIndex("A")
+        dfn = self.GetPlayer("D")
+        mid = self.GetPlayer("M")
+        atk = self.GetPlayer("A")
         whichPlayer = random.randint(1, 40)
-        if whichPlayer > 10 and whichPlayer < 21: whichPlayer = random.randint(mid, atk)
-        elif whichPlayer > 20: whichPlayer = random.randint(atk, 10)
-
-        p = self.playersList[whichPlayer]
+        if whichPlayer < 5: p = dfn
+        elif whichPlayer > 4 and whichPlayer < 21: p = mid
+        elif whichPlayer > 20: p = atk
+        self.lastStriker = p[2]
         return int(p[2].GetPerformance("A", p[0], p[1])), p[0], p[2].name
+
+    def AdjustStrikerVote(self, direction):
+        if direction == "UP": self.lastStriker.SetVote(1.0)
+        elif direction == "DOWN": self.lastStriker.SetVote(-0.5)
 
     def GetOverall(self):
         # p[0] --> role
@@ -107,6 +119,13 @@ class Formation(object):
         sum = 0
         for p in self.playersList: sum = sum + p[2].GetPerformance("GK", p[0], p[1])
         return int(sum)
+
+    def GetHomeBonus(self, zone):
+        if zone == "A": power = self.GetAttack()/11
+        if zone == "M": power = self.GetMidfield()/11
+        if zone == "D": power = self.GetDefense()/11
+        if zone == "ALL": power = self.GetOverall()/11
+        return int(power)
 
     def GetChariness(self):
         return self.chariness

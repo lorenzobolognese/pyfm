@@ -14,56 +14,82 @@ from match import Match
 from club import Club
 from coach import Coach
 from formation import *
+from berger import Draw
 from serieA import SERIEA
 
-MATCH_INTRO_SPEED_TIMEOUT = 0.0
-MATCH_COMMENTARY_SPEED_TIMEOUT = 0.0
+MATCH_MASKS_TIMEOUT = 5.0
+MATCH_COMMENTARY_SPEED_TIMEOUT = 0.25
 
 class League(object):
     def __init__(self):
         self.scorerRanking = []
         self.board = []
-        for item in SERIEA:
-            name, tactics, chariness, roster = item()
-            playing = Coach(tactics, roster)
-            subscribing = Club(name)
-            subscribing.SelectTeam(tactics, chariness, playing)
-            self.board.append(subscribing)
+        self.result = []
+        for challenger in SERIEA:
+            name, tactics, chariness, roster = challenger()
+            subscribe = Club(name, tactics, chariness, roster)
+            self.board.append(subscribe)
 
-    def ShowTeams(self):
-        for t in self.board:
-            stats = t.formation.GetPlayerStats()
-            for line in stats: print(line)
-
-    def ShowIntro(self, teamHome, teamAway):
-        stats1 = teamHome.formation.GetPlayerStats()
-        stats2 = teamAway.formation.GetPlayerStats()
-        print(stats1[0] + " vs. " + stats2[0])
-        time.sleep(MATCH_INTRO_SPEED_TIMEOUT)
-        for line in stats1: print(line)
-        time.sleep(MATCH_INTRO_SPEED_TIMEOUT)
-        for line in stats2: print(line)
-        time.sleep(MATCH_INTRO_SPEED_TIMEOUT)
+    def ShowTactics(self, team, timeout):
+        stats = team.tactics.GetPlayerStats()
+        print(team.name + " (" + team.tactics.module + ")")
+        for line in stats: print(line)
         print()
+        time.sleep(timeout)
 
-    def ShowStats(self, stats1, stats2, t1, t2):
-        name1 = t1.formation.GetPlayerStats()
-        name2 = t2.formation.GetPlayerStats()
-        print(name1[0] + " vs. " + name2[0])
-        print(stats1)
-        print(stats2)
+    def ShowIntro(self, teamHome, teamAway, timeout):
+        print("--- " + teamHome.name + " vs. " + teamAway.name + " ---")
+        print()
+        self.ShowTactics(teamHome, timeout)
+        self.ShowTactics(teamAway, timeout)
+        print(" ---> Kick Off!!! <---")
 
-    def ShowTable(self):
+    def ShowStats(self, statsHome, statsAway, teamHome, teamAway, timeout):
+        print(" ---> Final whistle <---")
+        print()
+        print("MATCH STATS (attempts, shoots, goals)")
+        print(teamHome.name + ": " + str(statsHome))
+        print(teamAway.name + ": " + str(statsAway))
+        print()
+        self.ShowTactics(teamHome, timeout)
+        self.ShowTactics(teamAway, timeout)
+
+    def ShowTable(self, timeout):
         table = []
-        for item in self.board: table.append((item.team.name, item.points, item.played, item.won, item.draw, item.lost, item.goalFor, item.goalAgainst))
+        for item in self.board: table.append((item.name, item.points, item.played, item.won, item.draw, item.lost, item.goalFor, item.goalAgainst))
         print("CHAMPIONSHIP BOARD")
         teams = sorted(table, reverse=True, key=lambda parameter: parameter[1])
         for t in teams: print(t)
         print()
+        time.sleep(timeout)
         print("STRIKERS")
         scorers = sorted(self.scorerRanking, reverse=True, key=lambda parameter: parameter[2])
         for p in scorers: print(p)
         print()
+        time.sleep(timeout)
+
+    def ShowRound(self, calendar, matches, idx, timeout):
+        result = ""
+        if (idx % matches) == 0:
+            # Last round results
+            if (idx > 0):
+                print("ROUND " + str((int((idx-1)/matches))+1) + ": FINAL RESULTS")
+                for i in range(0, matches):
+                    if (len(self.result) > 0): result = self.result.pop(0)
+                    print(calendar[idx-matches+i][0].name + " vs. " + calendar[idx-matches+i][1].name + ": " + str(result[0]) + " - " + str(result[1]))
+                print()
+
+            # Next round table
+            print("ROUND " + str((int(idx/matches))+1))
+            for i in range(0, matches):
+                print(calendar[idx+i][0].name + " vs. " + calendar[idx+i][1].name)
+            print()
+            time.sleep(timeout)
+
+    def UpdateRound(self, stats1, stats2):
+        goal1 = stats1[2]
+        goal2 = stats2[2]
+        self.result.append([goal1, goal2])
 
     def UpdateTable(self, club1, stats1, club2, stats2):
         goal1 = stats1[2]
@@ -107,27 +133,48 @@ class League(object):
         self.scorerRanking = temp
 
     def Play(self):
-        for t1 in self.board:
-            for t2 in self.board:
-                if t2 is not t1:
-                    match = Match(t1, t2)
-                    self.ShowIntro(t1, t2)
-                    match.start()
+        calendar = Draw(self.board, shuffle = True)
+        for i in range (0, len(calendar)):
+            teams = len(self.board) # 20
+            matches = int(teams/2) # 10
+            rounds = int(len(calendar)/matches) #38
 
-                    while (match.isPlaying == True) or (match.isLogEmpty() == False):
-                        msg = match.GetLog()
-                        print(msg)
-                        time.sleep(MATCH_COMMENTARY_SPEED_TIMEOUT)
+            # Show last round results and new round matches
+            self.ShowRound(calendar, int(len(self.board)/2), i, MATCH_MASKS_TIMEOUT)
 
-                    stats1, stats2, scorer = match.GetStats()
-                    self.ShowStats(stats1, stats2, t1, t2)
-                    self.UpdateTable(t1, stats1, t2, stats2)
-                    self.UpdateScorerRank(scorer)
-                    self.ShowTable()
+            # Get teams to play
+            club1 = calendar[i][0]
+            club2 = calendar[i][1]
+
+            # Home team
+            playing = Coach(club1.tactics, club1.roster)
+            club1.SelectTeam(club1.tactics, club1.chariness, playing)
+
+            # Away team
+            playing = Coach(club2.tactics, club2.roster)
+            club2.SelectTeam(club2.tactics, club2.chariness, playing)
+
+            # Play match
+            match = Match(club1, club2, isNeutralField = False)
+            self.ShowIntro(club1, club2, MATCH_MASKS_TIMEOUT)
+            match.start()
+
+            # Print out commentary
+            while (match.isPlaying == True) or (match.isLogEmpty() == False):
+                msg = match.GetLog()
+                print(msg)
+                time.sleep(MATCH_COMMENTARY_SPEED_TIMEOUT)
+
+            # Match and league statistics
+            stats1, stats2, scorer = match.GetStats()
+            self.ShowStats(stats1, stats2, club1, club2, MATCH_MASKS_TIMEOUT)
+            self.UpdateTable(club1, stats1, club2, stats2)
+            self.UpdateScorerRank(scorer)
+            self.UpdateRound(stats1, stats2)
+            self.ShowTable(MATCH_MASKS_TIMEOUT)
 
 def main():
     championship = League()
-    #championship.ShowTeams()
     championship.Play()
 
 if __name__ == '__main__':

@@ -9,14 +9,14 @@
 # Licence:     MIT
 #-------------------------------------------------------------------------------
 
-class Team(object):
-    def __init__(self, name):
-        self.name = name
-        self.roster = []
+#class Team(object):
+#    def __init__(self, name):
+#        self.name = name
+#        self.roster = []
 
-    def Add(self, playersList):
-        for p in playersList:
-            self.roster.append(p)
+    #def Add(self, playersList):
+    #    for p in playersList:
+    #        self.roster.append(p)
 
 if __name__ == '__main__':
     pass
