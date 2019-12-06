@@ -43,9 +43,12 @@ def Coach(tactics, roster):
                     end = -1
                 else: found = True
 
-    # Not playing players: take a rest and recover energy!
     for p in roster:
+        # Not playing players: take a rest and recover energy!
         if (p not in playing): p.ResetEnergy()
+
+        # Reset match vote
+        p.ResetVote()
 
     return playing
 

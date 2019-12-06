@@ -51,7 +51,8 @@ class League(object):
         print(teamHome.name + ": " + str(statsHome))
         print(teamAway.name + ": " + str(statsAway))
         print()
-        time.sleep(timeout)
+        self.ShowTactics(teamHome, timeout)
+        self.ShowTactics(teamAway, timeout)
 
     def ShowTable(self, timeout):
         table = []

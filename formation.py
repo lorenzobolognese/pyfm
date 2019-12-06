@@ -18,6 +18,7 @@ class Formation(object):
         self.dummy = Player(0, 0, 0, 0, 0, ["GK", "D", "M", "A"], ["L", "R", "C"])
         self.name = ""
         self.module = ""
+        self.lastStriker = None
         self.chariness = 0
 
     def Add(self, role, side, player):
@@ -34,7 +35,7 @@ class Formation(object):
         # p[2] --> player
         l = []
         for p in self.playersList:
-            l.append(p[0] + p[1] + " " + p[2].name + " --> " + str(p[2].GetStats(p[0], p[1])) + ", Energy = " + str(p[2].GetEnergy()))
+            l.append(p[0] + p[1] + " " + p[2].name + " --> " + str(p[2].GetStats(p[0], p[1])) + ", Energy = " + str(p[2].GetEnergy()) + ", Vote = " + str(p[2].GetVote()))
         return l
 
     def GetPartyStats(self):
@@ -45,26 +46,39 @@ class Formation(object):
         l.append(self.GetOverall())
         return l
 
-    def __getFirstPlayerByRoleIndex(self, role):
-        idx = 0
+    def GetPlayer(self, role):
+        temp = 0
+        sum = 0
         for p in self.playersList:
-            if p[0] == role: return idx
-            idx = idx + 1
+            if p[0] == role: sum = sum + p[2].GetPerformance(role, p[0], p[1])
+        whichPlayer = random.randint(0, sum)
+        for p in self.playersList:
+            if p[0] == role: temp = temp + p[2].GetPerformance(role, p[0], p[1])
+            if temp >= whichPlayer: return p
 
-    def GetStrike(self):
+    def AdjustPlayerVote(self, role, direction):
+        p = self.GetPlayer(role)
+        if direction == "UP": p[2].SetVote(0.5)
+        elif direction == "DOWN": p[2].SetVote(-0.5)
+
+    def GetStriker(self):
         # p[0] --> role
         # p[1] --> side
         # p[2] --> player
-        sum = 0
         # Increasing of propability it's a midfielder or attacker to attempt the shoot
-        mid = self.__getFirstPlayerByRoleIndex("M")
-        atk = self.__getFirstPlayerByRoleIndex("A")
+        dfn = self.GetPlayer("D")
+        mid = self.GetPlayer("M")
+        atk = self.GetPlayer("A")
         whichPlayer = random.randint(1, 40)
-        if whichPlayer > 10 and whichPlayer < 21: whichPlayer = random.randint(mid, atk)
-        elif whichPlayer > 20: whichPlayer = random.randint(atk, 10)
-
-        p = self.playersList[whichPlayer]
+        if whichPlayer < 5: p = dfn
+        elif whichPlayer > 4 and whichPlayer < 21: p = mid
+        elif whichPlayer > 20: p = atk
+        self.lastStriker = p[2]
         return int(p[2].GetPerformance("A", p[0], p[1])), p[0], p[2].name
+
+    def AdjustStrikerVote(self, direction):
+        if direction == "UP": self.lastStriker.SetVote(1.0)
+        elif direction == "DOWN": self.lastStriker.SetVote(-0.5)
 
     def GetOverall(self):
         # p[0] --> role

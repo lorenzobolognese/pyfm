@@ -86,28 +86,45 @@ class Match(Thread):
 
         stats = random.randint(0, draw + midfield1 + midfield2)
         if (stats < draw): return MATCH_EVENT_NOTHING_HAPPENED, "", ""
-        elif (stats < draw + midfield1): res = 1
-        else: res = 2
+        elif (stats < draw + midfield1):
+            attacking = self.f1
+            defending = self.f2
+            attack = attack1
+            defense = defense2
+            goalkeep = goalkeep2
+            returnEventGoal = MATCH_EVENT_HOME_TEAM_GOAL
+            returnEventSaved = MATCH_EVENT_HOME_TEAM_SHOOT_SAVED
+            returnEventStopped = MATCH_EVENT_HOME_TEAM_ATTACK_STOPPED
+        else:
+            attacking = self.f2
+            defending = self.f1
+            attack = attack2
+            defense = defense1
+            goalkeep = goalkeep1
+            returnEventGoal = MATCH_EVENT_AWAY_TEAM_GOAL
+            returnEventSaved = MATCH_EVENT_AWAY_TEAM_SHOOT_SAVED
+            returnEventStopped = MATCH_EVENT_AWAY_TEAM_ATTACK_STOPPED
 
-        # Home team attacking...
-        if (res == 1):
-            stats = random.randint(0, attack1 + defense2)
-            if (stats < attack1):
-                strike, role, name = self.f1.GetStrike()
-                stats = random.randint(0, strike + goalkeep2)
-                if (stats < strike): return MATCH_EVENT_HOME_TEAM_GOAL, role, name
-                else: return MATCH_EVENT_HOME_TEAM_SHOOT_SAVED, role, name
-            else: return MATCH_EVENT_HOME_TEAM_ATTACK_STOPPED, "", ""
-
-        # Away team attacking...
-        elif (res == 2):
-            stats = random.randint(0, attack2 + defense1)
-            if (stats < attack2):
-                strike, role, name = self.f2.GetStrike()
-                stats = random.randint(0, strike + goalkeep1)
-                if (stats < strike): return MATCH_EVENT_AWAY_TEAM_GOAL, role, name
-                else: return MATCH_EVENT_AWAY_TEAM_SHOOT_SAVED, role, name
-            else: return MATCH_EVENT_AWAY_TEAM_ATTACK_STOPPED, "", ""
+        attacking.AdjustPlayerVote("M", "UP")
+        defending.AdjustPlayerVote("M", "DOWN")
+        stats = random.randint(0, attack + defense)
+        if (stats < attack):
+            attacking.AdjustPlayerVote("A", "UP")
+            defending.AdjustPlayerVote("D", "DOWN")
+            strike, role, name = attacking.GetStriker()
+            stats = random.randint(0, strike + goalkeep)
+            if (stats < strike):
+                attacking.AdjustStrikerVote("UP")
+                defending.AdjustPlayerVote("GK", "DOWN")
+                return returnEventGoal, role, name
+            else:
+                attacking.AdjustStrikerVote("DOWN")
+                defending.AdjustPlayerVote("GK", "UP")
+                return returnEventSaved, role, name
+        else:
+            attacking.AdjustPlayerVote("A", "DOWN")
+            defending.AdjustPlayerVote("D", "UP")
+            return returnEventStopped, "", ""
 
     def run(self):
         self.isPlaying = True

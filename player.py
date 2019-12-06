@@ -20,6 +20,7 @@ class Player(object):
         self.stamina = stamina
         self.name = name
 
+        self.ResetVote()
         self.ResetEnergy()
 
     def GetStats(self, fieldRole, fieldSide):
@@ -36,7 +37,7 @@ class Player(object):
         if zone == "D": power = d
         if zone == "GK": power = gk
         if zone == "ALL": power = a + m + d + gk
-        return power
+        return int(power)
 
     def ResetEnergy(self):
         self.energy = self.stamina
@@ -46,6 +47,17 @@ class Player(object):
 
     def GetEnergy(self):
         return self.energy
+
+    def ResetVote(self):
+        self.vote = 6.0
+
+    def SetVote(self, delta):
+        self.vote = self.vote + delta
+        if self.vote > 10.0: self.vote = 10.0
+        elif self.vote < 0.0: self.vote = 0.0
+
+    def GetVote(self):
+        return self.vote
 
 if __name__ == '__main__':
     pass
