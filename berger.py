@@ -9,11 +9,15 @@
 # Licence:     MIT
 #-------------------------------------------------------------------------------
 
-def Draw(board):
+import random
+
+def Draw(board, shuffle = False):
     home = []
     away = []
     homeRounds = []
     awayRounds = []
+
+    if shuffle == True: random.shuffle(board)
 
     teams = len(board)
     rounds = teams - 1
@@ -38,4 +42,4 @@ def Draw(board):
 
 if __name__ == '__main__':
     league = ["A", "B", "C", "D"]
-    print(Draw(league))
+    print(Draw(league, True))

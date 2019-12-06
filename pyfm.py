@@ -132,7 +132,7 @@ class League(object):
         self.scorerRanking = temp
 
     def Play(self):
-        calendar = Draw(self.board)
+        calendar = Draw(self.board, shuffle = True)
         for i in range (0, len(calendar)):
             teams = len(self.board) # 20
             matches = int(teams/2) # 10
