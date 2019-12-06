@@ -7,6 +7,7 @@ Simple football simulator where all 2019/2020 Italian Serie A's teams play again
 Features included:
  - Full 2019/2020 Serie A with all the teams and players
  - League and strikers board
+ - Match statistics
  - Players match ratings
  - Match commentary with configurable speed
  - 38 rounds of home and away matches; home playing teams get bonus
