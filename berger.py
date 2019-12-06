@@ -12,20 +12,30 @@
 def Draw(board):
     home = []
     away = []
+    homeRounds = []
+    awayRounds = []
 
-    teamNumber = len(board)
-    rounds = len(board) - 1
-    if not teamNumber % 2 == 0: board.append('REST SHIFT')
-    i = 0
-    while i < rounds:
-        j = 0
-        while j < (teamNumber / 2):
-            home.append([board[j], board[rounds - j]])
-            away.append([board[rounds - j], board[j]])
-            j = j + 1
-        i = i + 1
-    home.extend(away)
-    return home
+    teams = len(board)
+    rounds = teams - 1
+    for i in range(0, int(teams/2)):
+        home.append(board[i])
+        away.append(board[rounds - i])
+
+    for i in range(0, rounds):
+        for j in range(0, int(teams/2)):
+            homeRounds.append([away[j], home[j]])
+            awayRounds.append([home[j], away[j]])
+
+        # List items rotation
+        pivot = home[0]
+        riporto = away.pop()
+        away.insert(0, home[1])
+        home.pop(0)
+        home.append(riporto)
+        home[0] = pivot
+
+    return (homeRounds + awayRounds)
 
 if __name__ == '__main__':
-    pass
+    league = ["A", "B", "C", "D"]
+    print(Draw(league))

@@ -24,6 +24,7 @@ class League(object):
     def __init__(self):
         self.scorerRanking = []
         self.board = []
+        self.result = []
         for challenger in SERIEA:
             name, tactics, chariness, roster = challenger()
             subscribe = Club(name, tactics, chariness, roster)
@@ -65,6 +66,29 @@ class League(object):
         for p in scorers: print(p)
         print()
         time.sleep(timeout)
+
+    def ShowRound(self, calendar, matches, idx, timeout):
+        result = ""
+        if (idx % matches) == 0:
+            # Last round results
+            if (idx > 0):
+                print("ROUND " + str((int((idx-1)/matches))+1) + ": FINAL RESULTS")
+                for i in range(0, matches):
+                    if (len(self.result) > 0): result = self.result.pop(0)
+                    print(calendar[idx-matches+i][0].name + " vs. " + calendar[idx-matches+i][1].name + ": " + str(result[0]) + " - " + str(result[1]))
+                print()
+
+            # Next round table
+            print("ROUND " + str((int(idx/matches))+1))
+            for i in range(0, matches):
+                print(calendar[idx+i][0].name + " vs. " + calendar[idx+i][1].name)
+            print()
+            time.sleep(timeout)
+
+    def UpdateRound(self, stats1, stats2):
+        goal1 = stats1[2]
+        goal2 = stats2[2]
+        self.result.append([goal1, goal2])
 
     def UpdateTable(self, club1, stats1, club2, stats2):
         goal1 = stats1[2]
@@ -108,11 +132,18 @@ class League(object):
         self.scorerRanking = temp
 
     def Play(self):
-        rounds = Draw(self.board)
-        for i in range (0, len(rounds)):
-            self.ShowRound(rounds, int(len(self.board)/2), i)
-            club1 = rounds[i][0]
-            club2 = rounds[i][1]
+        calendar = Draw(self.board)
+        for i in range (0, len(calendar)):
+            teams = len(self.board) # 20
+            matches = int(teams/2) # 10
+            rounds = int(len(calendar)/matches) #38
+
+            # Show last round results and new round matches
+            self.ShowRound(calendar, int(len(self.board)/2), i, MATCH_MASKS_TIMEOUT)
+
+            # Get teams to play
+            club1 = calendar[i][0]
+            club2 = calendar[i][1]
 
             # Home team
             playing = Coach(club1.tactics, club1.roster)
@@ -127,23 +158,19 @@ class League(object):
             self.ShowIntro(club1, club2, MATCH_MASKS_TIMEOUT)
             match.start()
 
+            # Print out commentary
             while (match.isPlaying == True) or (match.isLogEmpty() == False):
                 msg = match.GetLog()
                 print(msg)
                 time.sleep(MATCH_COMMENTARY_SPEED_TIMEOUT)
 
+            # Match and league statistics
             stats1, stats2, scorer = match.GetStats()
             self.ShowStats(stats1, stats2, club1, club2, MATCH_MASKS_TIMEOUT)
             self.UpdateTable(club1, stats1, club2, stats2)
             self.UpdateScorerRank(scorer)
+            self.UpdateRound(stats1, stats2)
             self.ShowTable(MATCH_MASKS_TIMEOUT)
-
-    def ShowRound(self, rounds, matches, idx):
-        if (idx % matches) == 0:
-            print("ROUND " + str((int(idx/matches))+1))
-            for i in range(0, matches):
-                print(rounds[idx+i][0].name, rounds[idx+i][1].name)
-            time.sleep(5)
 
 def main():
     championship = League()
