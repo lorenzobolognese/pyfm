@@ -35,7 +35,7 @@ class Formation(object):
         # p[2] --> player
         l = []
         for p in self.playersList:
-            l.append(p[0] + p[1] + " " + p[2].name + " --> " + str(p[2].GetStats(p[0], p[1])) + ", Energy = " + str(p[2].GetEnergy()) + ", Vote = " + str(p[2].GetVote()) + ", Average = " + str(p[2].GetAvarageVote()))
+            l.append(p[0] + p[1] + " " + p[2].name + " --> " + str(p[2].GetStats(p[0], p[1])) + ", Energy = " + str(p[2].GetEnergy()) + ", Vote = " + str(p[2].GetVote()))
         return l
 
     def GetPartyStats(self):

@@ -30,7 +30,7 @@ class League(object):
     def ShowPlayerRatings(self, cut, timeout):
         table = []
         for team in self.board: table = table + team.GetPlayerInfo()
-        print("BEST PLAYERS")
+        print("BEST PLAYERS (Minimum matches = " + str(cut) + ")")
         rate = sorted(table, reverse=True, key=lambda parameter: parameter[3])
         for r in rate:
             if r[4] > cut: print(r) # Just print rating of players with at least "cut" played match
@@ -179,8 +179,7 @@ class League(object):
             self.UpdateScorerRank(scorer)
             self.UpdateRound(statsHome, statsAway)
             self.ShowTable(MATCH_MASKS_TIMEOUT)
-
-        self.ShowPlayerRatings(MINIMUM_PLAYED_MATCHES_NUMBER_FOR_BEST_PLAYERS_CLASSIFICATION, MATCH_MASKS_TIMEOUT)
+            self.ShowPlayerRatings(int((i+1)/(2*matches)), MATCH_MASKS_TIMEOUT)
 
 def main():
     championship = League(LEAGUE)
