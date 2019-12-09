@@ -47,9 +47,6 @@ def Coach(tactics, roster):
         # Update avarage vote adding last played match vote (0.0 if the player was on the bench)
         p.SetTotalVote()
 
-        if p.name == "GRASSI Alberto":
-            print(p.name, p.played, p.vote, p.totalVote)
-
         # Not playing players: take a rest and recover energy!
         if (p not in playing):
             p.ResetEnergy()

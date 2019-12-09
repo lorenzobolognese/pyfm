@@ -15,7 +15,7 @@ from club import Club
 from coach import Coach
 from formation import *
 from berger import Draw
-from config import MATCH_MASKS_TIMEOUT, MATCH_COMMENTARY_SPEED_TIMEOUT, LEAGUE
+from config import MATCH_MASKS_TIMEOUT, MATCH_COMMENTARY_SPEED_TIMEOUT, MINIMUM_PLAYED_MATCHES_NUMBER_FOR_BEST_PLAYERS_CLASSIFICATION, LEAGUE
 
 class League(object):
     def __init__(self, league):
@@ -27,13 +27,15 @@ class League(object):
             subscribe = Club(name, tactics, chariness, roster)
             self.board.append(subscribe)
 
-    def ShowPlayerRatings(self, timeout):
-        for team in self.board:
-            stats = team.GetPlayerInfo()
-            print(team.name + " (" + team.tactics.module + ")")
-            for line in stats: print(line)
-            print()
-            time.sleep(timeout)
+    def ShowPlayerRatings(self, cut, timeout):
+        table = []
+        for team in self.board: table = table + team.GetPlayerInfo()
+        print("BEST PLAYERS")
+        rate = sorted(table, reverse=True, key=lambda parameter: parameter[3])
+        for r in rate:
+            if r[4] > cut: print(r) # Just print rating of players with at least "cut" played match
+        print()
+        time.sleep(timeout)
 
     def ShowTactics(self, team, timeout):
         stats = team.tactics.GetPlayerStats()
@@ -178,7 +180,7 @@ class League(object):
             self.UpdateRound(statsHome, statsAway)
             self.ShowTable(MATCH_MASKS_TIMEOUT)
 
-        self.ShowPlayerRatings(MATCH_MASKS_TIMEOUT)
+        self.ShowPlayerRatings(MINIMUM_PLAYED_MATCHES_NUMBER_FOR_BEST_PLAYERS_CLASSIFICATION, MATCH_MASKS_TIMEOUT)
 
 def main():
     championship = League(LEAGUE)

@@ -31,7 +31,7 @@ class Club(object):
     def GetPlayerInfo(self):
         l = []
         for p in self.roster:
-            l.append(str(p.role) + " " + p.name + " --> " + str(p.GetAvarageVote()) + " (" + str(p.GetPlayedMatches()) + ")")
+            l.append([p.role, p.name, self.name, p.GetAvarageVote(), p.GetPlayedMatches()])
         return l
 
 if __name__ == '__main__':
