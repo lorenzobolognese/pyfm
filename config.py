@@ -15,6 +15,9 @@ from serieA import SERIEA
 MATCH_MASKS_TIMEOUT = 5.00
 MATCH_COMMENTARY_SPEED_TIMEOUT = 0.25
 
+# Best player: minimum played matches number
+MINIMUM_PLAYED_MATCHES_NUMBER_FOR_BEST_PLAYERS_CLASSIFICATION = 30
+
 # League DB to be used for the simulation
 LEAGUE = SERIEA
 

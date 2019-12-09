@@ -21,6 +21,7 @@ Features included:
  - Simulated coach: at the beginning of each match he setups the team as per required tactic and chariness letting out-of-energy players sitting on the bench. Out-of-role players are adopted only when there's no other choice to get 11 players
  - Match ratings: performance of each player on each match is measured with a vote in the range 0.0 ... 10.0
  - Ball possession percentage
+ - Average ratings: each single match rating of eache player is taken to buil at the end of the league, the Best Players board
 
 About "chariness": it may take 3 levels:
  - 1 --> team will try to find the goal frequently exponing itself to counter-attack risks
