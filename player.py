@@ -28,7 +28,7 @@ class Player(object):
         else: r = 50
         if (fieldRole == "GK") or (fieldSide in self.side): p = 100
         else: p = 50
-        return self.rateA*(r/100)*(p/100), self.rateM*(r/100)*(p/100), self.rateD*(r/100)*(p/100), self.rateGK*(r/100)*(p/100)
+        return int(self.rateA*(r/100)*(p/100)), int(self.rateM*(r/100)*(p/100)), int(self.rateD*(r/100)*(p/100)), int(self.rateGK*(r/100)*(p/100))
 
     def GetPerformance(self, zone, fieldRole, fieldSide):
         a, m, d, gk = self.GetStats(fieldRole, fieldSide)
