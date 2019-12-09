@@ -206,9 +206,9 @@ class F343(Formation):
         self.Add("M", "C", self.dummy)
         self.Add("M", "C", self.dummy)
         self.Add("M", "R", self.dummy)
+        self.Add("A", "L", self.dummy)
         self.Add("A", "C", self.dummy)
-        self.Add("A", "C", self.dummy)
-        self.Add("A", "C", self.dummy)
+        self.Add("A", "R", self.dummy)
 
 class F352(Formation):
     def __init__(self):

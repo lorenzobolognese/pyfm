@@ -15,7 +15,7 @@ from club import Club
 from coach import Coach
 from formation import *
 from berger import Draw
-from config import MATCH_MASKS_TIMEOUT, MATCH_COMMENTARY_SPEED_TIMEOUT, MINIMUM_PLAYED_MATCHES_NUMBER_FOR_BEST_PLAYERS_CLASSIFICATION, LEAGUE
+from config import *
 
 class League(object):
     def __init__(self, league):
