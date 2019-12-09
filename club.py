@@ -28,5 +28,11 @@ class Club(object):
         self.tactics = tactics
         self.tactics.Set(playersList, chariness)
 
+    def GetPlayerInfo(self):
+        l = []
+        for p in self.roster:
+            l.append(str(p.role) + " " + p.name + " --> " + str(p.GetAvarageVote()) + " (" + str(p.GetPlayedMatches()) + ")")
+        return l
+
 if __name__ == '__main__':
     pass

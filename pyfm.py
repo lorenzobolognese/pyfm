@@ -27,6 +27,14 @@ class League(object):
             subscribe = Club(name, tactics, chariness, roster)
             self.board.append(subscribe)
 
+    def ShowPlayerRatings(self, timeout):
+        for team in self.board:
+            stats = team.GetPlayerInfo()
+            print(team.name + " (" + team.tactics.module + ")")
+            for line in stats: print(line)
+            print()
+            time.sleep(timeout)
+
     def ShowTactics(self, team, timeout):
         stats = team.tactics.GetPlayerStats()
         print(team.name + " (" + team.tactics.module + ")")
@@ -169,6 +177,8 @@ class League(object):
             self.UpdateScorerRank(scorer)
             self.UpdateRound(statsHome, statsAway)
             self.ShowTable(MATCH_MASKS_TIMEOUT)
+
+        self.ShowPlayerRatings(MATCH_MASKS_TIMEOUT)
 
 def main():
     championship = League(LEAGUE)
