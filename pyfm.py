@@ -15,17 +15,14 @@ from club import Club
 from coach import Coach
 from formation import *
 from berger import Draw
-from serieA import SERIEA
-
-MATCH_MASKS_TIMEOUT = 5.0
-MATCH_COMMENTARY_SPEED_TIMEOUT = 0.25
+from config import MATCH_MASKS_TIMEOUT, MATCH_COMMENTARY_SPEED_TIMEOUT, LEAGUE
 
 class League(object):
-    def __init__(self):
+    def __init__(self, league):
         self.scorerRanking = []
         self.board = []
         self.result = []
-        for challenger in SERIEA:
+        for challenger in league:
             name, tactics, chariness, roster = challenger()
             subscribe = Club(name, tactics, chariness, roster)
             self.board.append(subscribe)
@@ -174,7 +171,7 @@ class League(object):
             self.ShowTable(MATCH_MASKS_TIMEOUT)
 
 def main():
-    championship = League()
+    championship = League(LEAGUE)
     championship.Play()
 
 if __name__ == '__main__':
