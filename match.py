@@ -26,6 +26,7 @@ MATCH_EVENT_AWAY_TEAM_SHOOT_SAVED = -21
 class Match(Thread):
     def __init__(self, club1, club2, isNeutralField = True):
         super().__init__()
+        self.teamHome = club1.tactics
         self.teamAway = club2.tactics
         self.nameHome = club1.name
         self.nameAway = club2.name
@@ -33,7 +34,6 @@ class Match(Thread):
         self.log = Queue()
         self.isPlaying = True
 
-        self.shoot1 = 0
         self.goalHome = 0
         self.offenseHome = 0
         self.shootHome = 0
