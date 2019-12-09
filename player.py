@@ -9,6 +9,8 @@
 # Licence:     MIT
 #-------------------------------------------------------------------------------
 
+import random
+
 class Player(object):
     def __init__(self, rateA, rateM, rateD, rateGK, stamina, role, side, name = "John Doe"):
         self.role = role
@@ -26,10 +28,11 @@ class Player(object):
         self.ResetEnergy()
 
     def GetStats(self, fieldRole, fieldSide):
+        # When out of role of side, player is penalized by a random factor between 0,5 and 1
         if fieldRole in self.role: r = 100
-        else: r = 50
+        else: r = random.randint(50,100)
         if (fieldRole == "GK") or (fieldSide in self.side): p = 100
-        else: p = 50
+        else: p = random.randint(50,100)
         return int(self.rateA*(r/100)*(p/100)), int(self.rateM*(r/100)*(p/100)), int(self.rateD*(r/100)*(p/100)), int(self.rateGK*(r/100)*(p/100))
 
     def GetPerformance(self, zone, fieldRole, fieldSide):
