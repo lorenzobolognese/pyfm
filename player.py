@@ -20,7 +20,9 @@ class Player(object):
         self.stamina = stamina
         self.name = name
 
-        self.ResetVote()
+        self.VoidVote()
+        self.ResetPlayedMatches()
+        self.ResetTotalVote()
         self.ResetEnergy()
 
     def GetStats(self, fieldRole, fieldSide):
@@ -48,6 +50,9 @@ class Player(object):
     def GetEnergy(self):
         return self.energy
 
+    def VoidVote(self):
+        self.vote = 0.0
+
     def ResetVote(self):
         self.vote = 6.0
 
@@ -58,6 +63,25 @@ class Player(object):
 
     def GetVote(self):
         return self.vote
+
+    def ResetTotalVote(self):
+        self.totalVote = 0.0
+
+    def SetTotalVote(self):
+        self.totalVote = self.totalVote + self.vote
+
+    def ResetPlayedMatches(self):
+        self.played = 0
+
+    def SetPlayedMatches(self):
+        self.played = self.played + 1
+
+    def GetPlayedMatches(self):
+        return self.played
+
+    def GetAvarageVote(self):
+        if self.played > 0: return round(self.totalVote/self.played, 1)
+        else: return 0.0
 
 if __name__ == '__main__':
     pass

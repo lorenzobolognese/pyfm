@@ -15,20 +15,27 @@ from club import Club
 from coach import Coach
 from formation import *
 from berger import Draw
-from serieA import SERIEA
-
-MATCH_MASKS_TIMEOUT = 5.0
-MATCH_COMMENTARY_SPEED_TIMEOUT = 0.25
+from config import *
 
 class League(object):
-    def __init__(self):
+    def __init__(self, league):
         self.scorerRanking = []
         self.board = []
         self.result = []
-        for challenger in SERIEA:
+        for challenger in league:
             name, tactics, chariness, roster = challenger()
             subscribe = Club(name, tactics, chariness, roster)
             self.board.append(subscribe)
+
+    def ShowPlayerRatings(self, cut, timeout):
+        table = []
+        for team in self.board: table = table + team.GetPlayerInfo()
+        print("BEST PLAYERS (Minimum matches = " + str(cut) + ")")
+        rate = sorted(table, reverse=True, key=lambda parameter: parameter[3])
+        for r in rate:
+            if r[4] > cut: print(r) # Just print rating of players with at least "cut" played match
+        print()
+        time.sleep(timeout)
 
     def ShowTactics(self, team, timeout):
         stats = team.tactics.GetPlayerStats()
@@ -86,33 +93,33 @@ class League(object):
             print()
             time.sleep(timeout)
 
-    def UpdateRound(self, stats1, stats2):
-        goal1 = stats1[2]
-        goal2 = stats2[2]
-        self.result.append([goal1, goal2])
+    def UpdateRound(self, statsHome, statsAway):
+        goalHome = statsHome[2]
+        goalAway = statsAway[2]
+        self.result.append([goalHome, goalAway])
 
-    def UpdateTable(self, club1, stats1, club2, stats2):
-        goal1 = stats1[2]
-        goal2 = stats2[2]
-        club1.played = club1.played + 1
-        club1.goalFor = club1.goalFor + goal1
-        club1.goalAgainst = club1.goalAgainst + goal2
-        club2.played = club2.played + 1
-        club2.goalFor = club2.goalFor + goal2
-        club2.goalAgainst = club2.goalAgainst + goal1
-        if goal1 > goal2:
-            club1.points = club1.points + 3
-            club1.won = club1.won + 1
-            club2.lost = club2.lost + 1
-        elif goal1 < goal2:
-            club2.points = club2.points + 3
-            club2.won = club2.won + 1
-            club1.lost = club1.lost + 1
+    def UpdateTable(self, clubHome, statsHome, clubAway, statsAway):
+        goalHome = statsHome[2]
+        goalAway = statsAway[2]
+        clubHome.played = clubHome.played + 1
+        clubHome.goalFor = clubHome.goalFor + goalHome
+        clubHome.goalAgainst = clubHome.goalAgainst + goalAway
+        clubAway.played = clubAway.played + 1
+        clubAway.goalFor = clubAway.goalFor + goalAway
+        clubAway.goalAgainst = clubAway.goalAgainst + goalHome
+        if goalHome > goalAway:
+            clubHome.points = clubHome.points + 3
+            clubHome.won = clubHome.won + 1
+            clubAway.lost = clubAway.lost + 1
+        elif goalHome < goalAway:
+            clubAway.points = clubAway.points + 3
+            clubAway.won = clubAway.won + 1
+            clubHome.lost = clubHome.lost + 1
         else:
-            club1.draw = club1.draw + 1
-            club2.draw = club2.draw + 1
-            club1.points = club1.points + 1
-            club2.points = club2.points + 1
+            clubHome.draw = clubHome.draw + 1
+            clubAway.draw = clubAway.draw + 1
+            clubHome.points = clubHome.points + 1
+            clubAway.points = clubAway.points + 1
 
     def UpdateScorerRank(self, matchList):
         temp = []
@@ -143,20 +150,20 @@ class League(object):
             self.ShowRound(calendar, int(len(self.board)/2), i, MATCH_MASKS_TIMEOUT)
 
             # Get teams to play
-            club1 = calendar[i][0]
-            club2 = calendar[i][1]
+            clubHome = calendar[i][0]
+            clubAway = calendar[i][1]
 
             # Home team
-            playing = Coach(club1.tactics, club1.roster)
-            club1.SelectTeam(club1.tactics, club1.chariness, playing)
+            playing = Coach(clubHome.tactics, clubHome.roster)
+            clubHome.SelectTeam(clubHome.tactics, clubHome.chariness, playing)
 
             # Away team
-            playing = Coach(club2.tactics, club2.roster)
-            club2.SelectTeam(club2.tactics, club2.chariness, playing)
+            playing = Coach(clubAway.tactics, clubAway.roster)
+            clubAway.SelectTeam(clubAway.tactics, clubAway.chariness, playing)
 
             # Play match
-            match = Match(club1, club2, isNeutralField = False)
-            self.ShowIntro(club1, club2, MATCH_MASKS_TIMEOUT)
+            match = Match(clubHome, clubAway, isNeutralField = False)
+            self.ShowIntro(clubHome, clubAway, MATCH_MASKS_TIMEOUT)
             match.start()
 
             # Print out commentary
@@ -166,15 +173,16 @@ class League(object):
                 time.sleep(MATCH_COMMENTARY_SPEED_TIMEOUT)
 
             # Match and league statistics
-            stats1, stats2, scorer = match.GetStats()
-            self.ShowStats(stats1, stats2, club1, club2, MATCH_MASKS_TIMEOUT)
-            self.UpdateTable(club1, stats1, club2, stats2)
+            statsHome, statsAway, scorer = match.GetStats()
+            self.ShowStats(statsHome, statsAway, clubHome, clubAway, MATCH_MASKS_TIMEOUT)
+            self.UpdateTable(clubHome, statsHome, clubAway, statsAway)
             self.UpdateScorerRank(scorer)
-            self.UpdateRound(stats1, stats2)
+            self.UpdateRound(statsHome, statsAway)
             self.ShowTable(MATCH_MASKS_TIMEOUT)
+            self.ShowPlayerRatings(int((i+1)/(2*matches)), MATCH_MASKS_TIMEOUT)
 
 def main():
-    championship = League()
+    championship = League(LEAGUE)
     championship.Play()
 
 if __name__ == '__main__':

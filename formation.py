@@ -206,9 +206,9 @@ class F343(Formation):
         self.Add("M", "C", self.dummy)
         self.Add("M", "C", self.dummy)
         self.Add("M", "R", self.dummy)
+        self.Add("A", "L", self.dummy)
         self.Add("A", "C", self.dummy)
-        self.Add("A", "C", self.dummy)
-        self.Add("A", "C", self.dummy)
+        self.Add("A", "R", self.dummy)
 
 class F352(Formation):
     def __init__(self):
@@ -240,6 +240,22 @@ class F532(Formation):
         self.Add("M", "C", self.dummy)
         self.Add("M", "C", self.dummy)
         self.Add("A", "C", self.dummy)
+        self.Add("A", "C", self.dummy)
+
+class F541(Formation):
+    def __init__(self):
+        super().__init__()
+        self.module = "5-4-1"
+        self.Add("GK", "", self.dummy)
+        self.Add("D", "L", self.dummy)
+        self.Add("D", "C", self.dummy)
+        self.Add("D", "C", self.dummy)
+        self.Add("D", "C", self.dummy)
+        self.Add("D", "R", self.dummy)
+        self.Add("M", "L", self.dummy)
+        self.Add("M", "C", self.dummy)
+        self.Add("M", "C", self.dummy)
+        self.Add("M", "R", self.dummy)
         self.Add("A", "C", self.dummy)
 
 if __name__ == '__main__':
