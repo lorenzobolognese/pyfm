@@ -20,15 +20,19 @@ def Coach(tactics, roster):
     lookup = 0
     while len(playing) < 11:
         end = -1
+        # Explore the tactic chosen and get roles and positions needed
         for m in tactics.playersList:
             position = m[0]
             side = m[1]
             found = False
+            # Explode the team roster to find the suitable player for the role + position
             while (found == False):
                 idx = 0
                 for p in roster:
                     if (position in p.role) and (side in p.side) and (idx > end) and (p not in playing):
+                        # Check if the suitable player for the role has some energy left
                         if p.GetEnergy() > 0:
+                            # Add player to the playing team
                             playing.append(p)
                             p.SetEnergy()
                             end = idx
