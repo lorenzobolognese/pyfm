@@ -15,6 +15,11 @@ from serieA import SERIEA
 MATCH_MASKS_TIMEOUT = 5.00
 MATCH_COMMENTARY_SPEED_TIMEOUT = 0.25
 
+# User interface: print to standard output or text file
+PRINT_TO_STANDARD_OUTPUT = False
+PRINT_TO_TXT_FILE = True
+TXT_FILE_PATH_AND_NAME = "c:\Temp\pyfm.txt"
+
 # League DB to be used for the simulation
 LEAGUE = SERIEA
 
