@@ -429,7 +429,7 @@ def Parma():
 	roster.append(Player(9, 22, 9, 0, 3, 'M', ['L', 'R', 'C'], 'GRASSI Alberto'))
 	roster.append(Player(6, 15, 6, 0, 3, 'M', ['L', 'R', 'C'], 'KULUSEVSKI Dejan'))
 	roster.append(Player(4, 11, 4, 0, 2, 'M', ['L', 'R', 'C'], 'MUNARI Gianni'))
-	roster.append(Player(57, 23, 23, 0, 7, 'A', ['L', 'R', 'C'], 'GERVINHO undefined'))
+	roster.append(Player(57, 23, 23, 0, 7, 'A', ['L', 'R', 'C'], 'GERVINHO'))
 	roster.append(Player(43, 17, 17, 0, 5, 'A', ['L', 'R', 'C'], 'INGLESE Roberto'))
 	roster.append(Player(24, 10, 10, 0, 4, 'A', ['L', 'R', 'C'], 'KARAMOH Yann'))
 	roster.append(Player(20, 8, 8, 0, 3, 'A', ['L', 'R', 'C'], 'CORNELIUS Andreas'))
