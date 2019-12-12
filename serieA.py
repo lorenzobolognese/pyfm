@@ -28,7 +28,7 @@ def Atalanta():
 	roster.append(Player(13, 19, 32, 0, 4, 'D', ['L', 'R', 'C'], 'MASIELLO Andrea'))
 	roster.append(Player(10, 15, 25, 0, 4, 'D', ['L', 'R', 'C'], 'DJIMSITI Berat'))
 	roster.append(Player(10, 15, 25, 0, 4, 'D', ['L', 'R', 'C'], 'ARANA Guilherme'))
-	roster.append(Player(4, 7, 11, 0, 2, 'D', ['L', 'R', 'C'], 'IBANEZ -'))
+	roster.append(Player(4, 7, 11, 0, 2, 'D', ['L', 'R', 'C'], 'IBANEZ'))
 	roster.append(Player(58, 96, 38, 0, 11, 'M', ['L', 'R', 'C'], 'GOMEZ Alejandro'))
 	roster.append(Player(38, 63, 25, 0, 7, 'M', ['L', 'R', 'C'], 'FREULER Remo'))
 	roster.append(Player(38, 63, 25, 0, 7, 'M', ['L', 'R', 'C'], 'PASALIC Mario'))
