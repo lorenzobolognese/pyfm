@@ -16,9 +16,11 @@ from coach import Coach
 from formation import *
 from berger import Draw
 from config import *
+from ui import Print
 
 class League(object):
     def __init__(self, league):
+        self.Print = Print(PRINT_TO_STANDARD_OUTPUT, PRINT_TO_TXT_FILE, TXT_FILE_PATH_AND_NAME)
         self.scorerRanking = []
         self.board = []
         self.result = []
@@ -30,49 +32,49 @@ class League(object):
     def ShowPlayerRatings(self, cut, timeout):
         table = []
         for team in self.board: table = table + team.GetPlayerInfo()
-        print("BEST PLAYERS (Minimum matches = " + str(cut) + ")")
+        self.Print.Out("BEST PLAYERS (Minimum matches = " + str(cut) + ")")
         rate = sorted(table, reverse=True, key=lambda parameter: parameter[3])
         for r in rate:
-            if r[4] > cut: print(r) # Just print rating of players with at least "cut" played match
-        print()
+            if r[4] > cut: self.Print.Out(r) # Just print rating of players with at least "cut" played match
+        self.Print.Out("")
         time.sleep(timeout)
 
     def ShowTactics(self, team, timeout):
         stats = team.tactics.GetPlayerStats()
-        print(team.name + " (" + team.tactics.module + ")")
-        for line in stats: print(line)
-        print()
+        self.Print.Out(team.name + " (" + team.tactics.module + ")")
+        for line in stats: self.Print.Out(line)
+        self.Print.Out("")
         time.sleep(timeout)
 
     def ShowIntro(self, teamHome, teamAway, timeout):
-        print("--- " + teamHome.name + " vs. " + teamAway.name + " ---")
-        print()
+        self.Print.Out("--- " + teamHome.name + " vs. " + teamAway.name + " ---")
+        self.Print.Out("")
         self.ShowTactics(teamHome, timeout)
         self.ShowTactics(teamAway, timeout)
-        print(" ---> Kick Off!!! <---")
+        self.Print.Out(" ---> Kick Off!!! <---")
 
     def ShowStats(self, statsHome, statsAway, teamHome, teamAway, timeout):
-        print(" ---> Final whistle <---")
-        print()
-        print("MATCH STATS (attempts, shoots, goals)")
-        print(teamHome.name + ": " + str(statsHome))
-        print(teamAway.name + ": " + str(statsAway))
-        print()
+        self.Print.Out(" ---> Final whistle <---")
+        self.Print.Out("")
+        self.Print.Out("MATCH STATS (attempts, shoots, goals)")
+        self.Print.Out(teamHome.name + ": " + str(statsHome))
+        self.Print.Out(teamAway.name + ": " + str(statsAway))
+        self.Print.Out("")
         self.ShowTactics(teamHome, timeout)
         self.ShowTactics(teamAway, timeout)
 
     def ShowTable(self, timeout):
         table = []
         for item in self.board: table.append((item.name, item.points, item.played, item.won, item.draw, item.lost, item.goalFor, item.goalAgainst))
-        print("CHAMPIONSHIP BOARD")
+        self.Print.Out("CHAMPIONSHIP BOARD")
         teams = sorted(table, reverse=True, key=lambda parameter: parameter[1])
-        for t in teams: print(t)
-        print()
+        for t in teams: self.Print.Out(t)
+        self.Print.Out("")
         time.sleep(timeout)
-        print("STRIKERS")
+        self.Print.Out("STRIKERS")
         scorers = sorted(self.scorerRanking, reverse=True, key=lambda parameter: parameter[2])
-        for p in scorers: print(p)
-        print()
+        for p in scorers: self.Print.Out(p)
+        self.Print.Out("")
         time.sleep(timeout)
 
     def ShowRound(self, calendar, matches, idx, timeout):
@@ -80,17 +82,17 @@ class League(object):
         if (idx % matches) == 0:
             # Last round results
             if (idx > 0):
-                print("ROUND " + str((int((idx-1)/matches))+1) + ": FINAL RESULTS")
+                self.Print.Out("ROUND " + str((int((idx-1)/matches))+1) + ": FINAL RESULTS")
                 for i in range(0, matches):
                     if (len(self.result) > 0): result = self.result.pop(0)
-                    print(calendar[idx-matches+i][0].name + " vs. " + calendar[idx-matches+i][1].name + ": " + str(result[0]) + " - " + str(result[1]))
-                print()
+                    self.Print.Out(calendar[idx-matches+i][0].name + " vs. " + calendar[idx-matches+i][1].name + ": " + str(result[0]) + " - " + str(result[1]))
+                self.Print.Out("")
 
             # Next round table
-            print("ROUND " + str((int(idx/matches))+1))
+            self.Print.Out("ROUND " + str((int(idx/matches))+1))
             for i in range(0, matches):
-                print(calendar[idx+i][0].name + " vs. " + calendar[idx+i][1].name)
-            print()
+                self.Print.Out(calendar[idx+i][0].name + " vs. " + calendar[idx+i][1].name)
+            self.Print.Out("")
             time.sleep(timeout)
 
     def UpdateRound(self, statsHome, statsAway):
@@ -169,7 +171,7 @@ class League(object):
             # Print out commentary
             while (match.isPlaying == True) or (match.isLogEmpty() == False):
                 msg = match.GetLog()
-                print(msg)
+                self.Print.Out(msg)
                 time.sleep(MATCH_COMMENTARY_SPEED_TIMEOUT)
 
             # Match and league statistics
@@ -180,6 +182,9 @@ class League(object):
             self.UpdateRound(statsHome, statsAway)
             self.ShowTable(MATCH_MASKS_TIMEOUT)
             self.ShowPlayerRatings(int((i+1)/(2*matches)), MATCH_MASKS_TIMEOUT)
+
+        # Stop spooling
+        self.Print.Close()
 
 def main():
     championship = League(LEAGUE)

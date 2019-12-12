@@ -53,8 +53,9 @@ class Formation(object):
             if p[0] == role: sum = sum + p[2].GetPerformance(role, p[0], p[1])
         whichPlayer = random.randint(0, sum)
         for p in self.playersList:
-            if p[0] == role: temp = temp + p[2].GetPerformance(role, p[0], p[1])
-            if temp >= whichPlayer: return p
+            if p[0] == role:
+                temp = temp + p[2].GetPerformance(role, p[0], p[1])
+                if temp >= whichPlayer: return p
 
     def AdjustPlayerVote(self, role, direction):
         p = self.GetPlayer(role)
