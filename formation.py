@@ -29,13 +29,15 @@ class Formation(object):
         for i in range(0, 11):
             self.playersList[i][2] = playing[i]
 
-    def GetPlayerStats(self):
+    def GetPlayerStats(self, showRatings):
         # p[0] --> role
         # p[1] --> side
         # p[2] --> player
         l = []
         for p in self.playersList:
-            l.append(p[0] + p[1] + " " + p[2].name + " --> " + str(p[2].GetStats(p[0], p[1])) + ", Energy = " + str(p[2].GetEnergy()) + ", Vote = " + str(p[2].GetVote()))
+            footer = ""
+            if showRatings == True: footer = ", Vote = " + str(p[2].GetVote())
+            l.append(p[0] + p[1] + " " + p[2].name + " --> " + str(p[2].GetStats(p[0], p[1])) + ", Energy = " + str(p[2].GetEnergy()) + footer)
         return l
 
     def GetPartyStats(self):
