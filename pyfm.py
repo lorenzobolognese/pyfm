@@ -18,6 +18,8 @@ from berger import Draw
 from config import *
 from ui import Print
 
+VERSION = 0.01
+
 class League(object):
     def __init__(self, league):
         self.Print = Print(PRINT_TO_STANDARD_OUTPUT, PRINT_TO_TXT_FILE, TXT_FILE_PATH_AND_NAME)
@@ -29,18 +31,26 @@ class League(object):
             subscribe = Club(name, tactics, chariness, roster)
             self.board.append(subscribe)
 
-    def ShowPlayerRatings(self, cut, timeout):
+    def ShowIntroCredits(self):
+        print("Python Football Manager v" + str(VERSION))
+        print("Simulation is running, please wait...")
+        print()
+
+    def ShowOutroCredits(self):
+        print("Done!")
+
+    def ShowPlayerRatings(self, cut, rounds, timeout):
         table = []
         for team in self.board: table = table + team.GetPlayerInfo()
-        self.Print.Out("BEST PLAYERS (Minimum matches = " + str(cut) + ")")
+        self.Print.Out("BEST PLAYERS AFTER ROUND " + str(int(rounds)) + " (Minimum matches = " + str(cut) + ")")
         rate = sorted(table, reverse=True, key=lambda parameter: parameter[3])
         for r in rate:
             if r[4] > cut: self.Print.Out(r) # Just print rating of players with at least "cut" played match
         self.Print.Out("")
         time.sleep(timeout)
 
-    def ShowTactics(self, team, timeout):
-        stats = team.tactics.GetPlayerStats()
+    def ShowTactics(self, team, showRatings, timeout):
+        stats = team.tactics.GetPlayerStats(showRatings)
         self.Print.Out(team.name + " (" + team.tactics.module + ")")
         for line in stats: self.Print.Out(line)
         self.Print.Out("")
@@ -49,35 +59,35 @@ class League(object):
     def ShowIntro(self, teamHome, teamAway, timeout):
         self.Print.Out("--- " + teamHome.name + " vs. " + teamAway.name + " ---")
         self.Print.Out("")
-        self.ShowTactics(teamHome, timeout)
-        self.ShowTactics(teamAway, timeout)
+        self.ShowTactics(teamHome, False, timeout)
+        self.ShowTactics(teamAway, False, timeout)
         self.Print.Out(" ---> Kick Off!!! <---")
 
     def ShowStats(self, statsHome, statsAway, teamHome, teamAway, timeout):
         self.Print.Out(" ---> Final whistle <---")
         self.Print.Out("")
-        self.Print.Out("MATCH STATS (attempts, shoots, goals)")
+        self.Print.Out("MATCH STATS (attempts, shoots, goals, ball possession (%))")
         self.Print.Out(teamHome.name + ": " + str(statsHome))
         self.Print.Out(teamAway.name + ": " + str(statsAway))
         self.Print.Out("")
-        self.ShowTactics(teamHome, timeout)
-        self.ShowTactics(teamAway, timeout)
+        self.ShowTactics(teamHome, True, timeout)
+        self.ShowTactics(teamAway, True, timeout)
 
-    def ShowTable(self, timeout):
+    def ShowTable(self, rounds, timeout):
         table = []
         for item in self.board: table.append((item.name, item.points, item.played, item.won, item.draw, item.lost, item.goalFor, item.goalAgainst))
-        self.Print.Out("CHAMPIONSHIP BOARD")
+        self.Print.Out("LEAGUE TABLE: ROUND " + str(int(rounds)))
         teams = sorted(table, reverse=True, key=lambda parameter: parameter[1])
         for t in teams: self.Print.Out(t)
         self.Print.Out("")
         time.sleep(timeout)
-        self.Print.Out("STRIKERS")
+        self.Print.Out("STRIKERS: ROUND " + str(int(rounds)))
         scorers = sorted(self.scorerRanking, reverse=True, key=lambda parameter: parameter[2])
         for p in scorers: self.Print.Out(p)
         self.Print.Out("")
         time.sleep(timeout)
 
-    def ShowRound(self, calendar, matches, idx, timeout):
+    def ShowLastRound(self, calendar, matches, idx, timeout):
         result = ""
         if (idx % matches) == 0:
             # Last round results
@@ -88,6 +98,8 @@ class League(object):
                     self.Print.Out(calendar[idx-matches+i][0].name + " vs. " + calendar[idx-matches+i][1].name + ": " + str(result[0]) + " - " + str(result[1]))
                 self.Print.Out("")
 
+    def ShowNextRound(self, calendar, matches, idx, timeout):
+        if (idx % matches) == 0:
             # Next round table
             self.Print.Out("ROUND " + str((int(idx/matches))+1))
             for i in range(0, matches):
@@ -143,13 +155,12 @@ class League(object):
 
     def Play(self):
         calendar = Draw(self.board, shuffle = True)
+        teams = len(self.board) # 20
+        matches = int(teams/2) # 10
+        rounds = int(len(calendar)/matches) #38
         for i in range (0, len(calendar)):
-            teams = len(self.board) # 20
-            matches = int(teams/2) # 10
-            rounds = int(len(calendar)/matches) #38
-
             # Show last round results and new round matches
-            self.ShowRound(calendar, int(len(self.board)/2), i, MATCH_MASKS_TIMEOUT)
+            self.ShowNextRound(calendar, int(len(self.board)/2), i, MATCH_MASKS_TIMEOUT)
 
             # Get teams to play
             clubHome = calendar[i][0]
@@ -180,15 +191,21 @@ class League(object):
             self.UpdateTable(clubHome, statsHome, clubAway, statsAway)
             self.UpdateScorerRank(scorer)
             self.UpdateRound(statsHome, statsAway)
-            self.ShowTable(MATCH_MASKS_TIMEOUT)
-            self.ShowPlayerRatings(int((i+1)/(2*matches)), MATCH_MASKS_TIMEOUT)
+            self.ShowLastRound(calendar, int(len(self.board)/2), i+1, MATCH_MASKS_TIMEOUT)
+
+            # Show tables and player ratings just at the end of each round
+            if ((i+1) % matches) == 0:
+                self.ShowTable((i+1)/matches, MATCH_MASKS_TIMEOUT)
+                self.ShowPlayerRatings(int((i+1)/(2*matches)), (i+1)/matches, MATCH_MASKS_TIMEOUT)
 
         # Stop spooling
         self.Print.Close()
 
 def main():
     championship = League(LEAGUE)
+    championship.ShowIntroCredits()
     championship.Play()
+    championship.ShowOutroCredits()
 
 if __name__ == '__main__':
     main()
